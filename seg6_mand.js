@@ -164,4 +164,10 @@ async function getSids(prefix) {
 //console.log(options.epsilon);
 // prefixを引数にしてetcdから該当するprefix_sid_listを取得する関数
 
+// 最終的な現在の経路を表示
+if (options.debug) {
+	let commandResult = execSync('ip -6 route show');
+	console.log(`$ ip -6 route show: \n${stdout.toString()}`); 
+}
+
 if (options.debug) { console.log("*******DEBUG MODE********"); }
