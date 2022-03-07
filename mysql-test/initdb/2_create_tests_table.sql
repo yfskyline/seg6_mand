@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS `rtt_db`.`prefix_sid_rtt` (
   `dest_prefix` varchar(43),
   `sid` varchar(39),
   `rtt` int(32) unsigned,
-  PRIMARY KEY (`id`),
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
