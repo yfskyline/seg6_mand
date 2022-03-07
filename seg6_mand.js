@@ -4,7 +4,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const mysql = require('mysql');
 const { Etcd3 } = require('etcd3');
-const client = new Etcd3();
+const client = new Etcd3({ hosts: ['http://epe-manager.fujisawa.vsix.wide.ad.jp:2379'] });
 
 const optionDefinitions = [
         {
