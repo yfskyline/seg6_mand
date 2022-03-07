@@ -104,8 +104,12 @@ connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId,
 			// sidがNULLかどうか
 			if (result.sid === null) {
 				console.log('NULL!!!');
-				// etcdから該当prefixの一覧を取得する
-				// getSid(prefix)
+
+				// get sids corresponding to dest_prefix from etcd
+				//getSids(result.dest_prefix);
+				getSids('2001:db8::/64'); // skyline
+				console.log(getSids(result.dest_prefix));
+
 				// デフォルトSIDを優先して(もしくは適当にどちらかを優先して)経路を埋め込む
 				// addRoute(prefix, sids, preferSid);
 			} else {
