@@ -1,0 +1,5 @@
+net.ipv6.flowlabel_reflect=1
+
+net.ipv6.conf.all.seg6_enabled=1
+net.ipv6.conf.ens192.seg6_enabled=1
+net.ipv6.conf.default.seg6_enabled=1

@@ -1,0 +1,1000 @@
+ 1006  cd frr/
+ 1007  ls
+ 1008  vim entrypoint.sh 
+ 1009  cd ..
+ 1010  ./recreate.sh 
+ 1011  docker-compose exec rt0 bash
+ 1012  cd frr/
+ 1013  ls
+ 1014  vim entrypoint.sh 
+ 1015  cd ..
+ 1016  ./recreate.sh 
+ 1017  docker-compose exec rt0 bash
+ 1018  ls
+ 1019  cd frr/
+ 1020  ls
+ 1021  vim entrypoint.sh 
+ 1022  docker-compose exec rt0 bash
+ 1023  vim entrypoint.sh 
+ 1024  docker-compose exec rt0  ip -br a  | awk '{print $1}' | awk -F '@' '{print $1}' 
+ 1025  docker-compose exec rt0  ip -br a  | awk '{print $1}' | awk -F '@' '{print $1}'  |  xargs -n1  print$1
+ 1026  docker-compose exec rt0  ip -br a  | awk '{print $1}' | awk -F '@' '{print $1}'  |  xargs -n1  echo $1
+ 1027  docker-compose exec rt0  ip -br a  | awk '{print $1}' | awk -F '@' '{print $1}'  |  xargs -n1  echo net.ipv6.conf.$1.seg6_enabled
+ 1028  docker-compose exec rt0  ip -br a  | awk '{print $1}' | awk -F '@' '{print $1}'  |  xargs -n1  echo "net.ipv6.conf.$1.seg6_enabled"
+ 1029  docker-compose exec rt0  
+ 1030  docker-compose exec rt0  bash
+ 1031  ls
+ 1032  vim entrypoint.sh 
+ 1033  cd ..
+ 1034  ./recreate.sh 
+ 1035  docker-compose exec rt0  bash
+ 1036  ls
+ 1037  cd config/
+ 1038  ls
+ 1039  cd ..
+ 1040  ./recreate.sh 
+ 1041  ip a
+ 1042  docker-compose exec rt0  bash 
+ 1043  vim config/rt0/init-route.sh 
+ 1044  docker-compose exec rt0  bash 
+ 1045  ./recreate.sh 
+ 1046  docker-compose exec rt0  bash 
+ 1047  docker-compose stop rt3  
+ 1048  git status
+ 1049  git add frr/entrypoint.sh 
+ 1050  git add config/
+ 1051  ls
+ 1052  git status
+ 1053  git commit -m "add seg6 script"
+ 1054  git push
+ 1055  ls
+ 1056  cd 
+ 1057  ls
+ 1058  vim main.py 
+ 1059  tc
+ 1060  cd epe-testbed/
+ 1061  ls
+ 1062  ./recreate.sh 
+ 1063  docker-compose exec bpm bash
+ 1064  ls
+ 1065  git status
+ 1066  git add frr/Dockerfile 
+ 1067  vim recreate.sh 
+ 1068  git submodule foreach git pull origin main
+ 1069  git add epe-bp-manager/
+ 1070  git status
+ 1071  git commit -m "add iperf3"
+ 1072  git push
+ 1073  sudo -s
+ 1074  ./recreate.sh 
+ 1075  docker-compose exec bpm bash
+ 1076  ls
+ 1077  sudo -s
+ 1078  sudo -s
+ 1079  docker-compose exec rt0 bash
+ 1080  cd epe-testbed/
+ 1081  docker-compose exec rt0 bash
+ 1082  ls
+ 1083  cd frr/
+ 1084  ls
+ 1085  cd ..
+ 1086  cd config/
+ 1087  ls
+ 1088  cd rt0/
+ 1089  ls
+ 1090  vim init-route.sh 
+ 1091  cd
+ 1092  cd epe-testbed/
+ 1093  ls
+ 1094  docker-compose exec bpm bash
+ 1095  ls
+ 1096  cd con-server/
+ 1097  ls
+ 1098  vim entrypoint.sh 
+ 1099  cd ..
+ 1100  ls
+ 1101  cd content-server/
+ 1102  ls
+ 1103  cd mon-app/
+ 1104  ls
+ 1105  vim start.sh 
+ 1106  sl
+ 1107  ls
+ 1108  docker-compose exec bash rt1
+ 1109  cd ..
+ 1110  cd
+ 1111  las
+ 1112  ls
+ 1113  cd epe-testbed/
+ 1114  docker-compose exec  rt1 bash
+ 1115  docker-compose exec rt1 bash
+ 1116  ls
+ 1117  cd content-server/
+ 1118  ls
+ 1119  ls
+ 1120  cd epe-testbed/
+ 1121  docker-compose exec cleint bash
+ 1122  docker-compose exec client bash
+ 1123  ls
+ 1124  cd db/
+ 1125  l
+ 1126  cat db.json 
+ 1127  cat db.json  | jq
+ 1128  git pull
+ 1129  cd ..
+ 1130  ./recreate.sh 
+ 1131  tools/eval1-add-delay.sh 
+ 1132  vim tools/eval1-add-delay.sh 
+ 1133  tools/eval1-add-delay.sh 
+ 1134  htop
+ 1135  ls
+ 1136  cd epe-testbed/
+ 1137  ls
+ 1138  git status
+ 1139  cd config/
+ 1140  ls
+ 1141  cd bpm/
+ 1142  ls
+ 1143  vim gobgpd.conf 
+ 1144  cd ..
+ 1145  ls
+ 1146  cd rt0/
+ 1147  ls
+ 1148  vim frr.conf 
+ 1149  cd ..
+ 1150  cd rt1/
+ 1151  vim frr.conf 
+ 1152  cd ..
+ 1153  cd rt2/
+ 1154  vim frr.conf 
+ 1155  cd ..
+ 1156  vim rt3/frr.conf 
+ 1157  cd ..
+ 1158  ls
+ 1159  cd config/
+ 1160  ls
+ 1161  cd user/
+ 1162  ls
+ 1163  vim frr.conf 
+ 1164  cd ..
+ 1165  grep -r 650 .
+ 1166  cd ..
+ 1167  git status
+ 1168  git add config/
+ 1169  git diff
+ 1170  git status
+ 1171  git commit -m "change ASN"
+ 1172  git push
+ 1173  ./recreate.sh 
+ 1174  ls
+ 1175  vim docker-compose.yml 
+ 1176  sudo -s
+ 1177  git status
+ 1178  git push
+ 1179  git pull
+ 1180  ls
+ 1181  vim docker-compose.yml 
+ 1182  docker ps
+ 1183  sudo -s
+ 1184  docker-compose build
+ 1185  vim docker-compose.yml 
+ 1186  git status
+ 1187  rm docker-compose.yml 
+ 1188  git status
+ 1189  git pull
+ 1190  vim docker-compose.yml 
+ 1191  sudo -s
+ 1192  docker-compose build
+ 1193  git pull
+ 1194  docker-compose build
+ 1195  git pull
+ 1196  git status
+ 1197  ls -lah
+ 1198  sudo chown vsix:vsix -R .
+ 1199  git pull
+ 1200  docker-compose build
+ 1201  sudo -s
+ 1202  git pull
+ 1203  docker-compose build
+ 1204  docker-compose up 
+ 1205  git pull
+ 1206  docker-compose build
+ 1207  ./recreate.sh 
+ 1208  docker-compose build
+ 1209  git pull
+ 1210  ./recreate.sh 
+ 1211  docker-compose exec bash client
+ 1212  docker-compose exec client bash
+ 1213  ./recreate.sh 
+ 1214  docker-compose exec client bash
+ 1215  ./recreate.sh 
+ 1216  docker-compose exec client bash
+ 1217  docker-compose exec con1 bash
+ 1218  ls
+ 1219  docker-compose exec con1 bash
+ 1220  ls
+ 1221  docker-compose exec con1 bpm
+ 1222  docker-compose exec bpm bash
+ 1223  ./recreate.sh 
+ 1224  docker-compose exec bpm bash
+ 1225  ./recreate.sh 
+ 1226  docker-compose exec bpm bash
+ 1227  docker-compose exec bpm rt0
+ 1228  docker-compose exec rt0 bash
+ 1229  ./recreate.sh 
+ 1230  docker-compose exec con1 bash
+ 1231  docker-compose exec con1 bpm
+ 1232  docker-compose exec bpm bash
+ 1233  docker-compose exec rt4 bash
+ 1234  docker-compose exec rt2 bash
+ 1235  docker-compose exec rt3 bash
+ 1236  docker-compose exec client bash
+ 1237  ip a
+ 1238  ls
+ 1239  cd content-server/
+ 1240  ls
+ 1241  cd mon-app/
+ 1242  ls
+ 1243  vim end.sh 
+ 1244  vim input.py 
+ 1245  vim start.sh 
+ 1246  ls
+ 1247  vim start.sh 
+ 1248  ls
+ 1249  cd ..
+ 1250  ls
+ 1251  cd mon-app/
+ 1252  ls
+ 1253  vim start.sh 
+ 1254  cd ..
+ 1255  ls
+ 1256  cd epe-testbed/
+ 1257  ls
+ 1258  cd con-server/
+ 1259  ls
+ 1260  vim entrypoint.sh 
+ 1261  vim Dockerfile 
+ 1262  cd ..
+ 1263  ls
+ 1264  cd 
+ 1265  ls
+ 1266  cd content-server/
+ 1267  ls
+ 1268  cd mon-app/
+ 1269  ls
+ 1270  vim input.py 
+ 1271  vim end.sh 
+ 1272  vim start.sh 
+ 1273  cd ..
+ 1274  ls
+ 1275  cd content-server/
+ 1276  ls
+ 1277  cd mon-app/
+ 1278  ls
+ 1279  cd ..
+ 1280  ls
+ 1281  cd epe-testbed/
+ 1282  ls
+ 1283  cd con-server/
+ 1284  ls
+ 1285  cd ..
+ 1286  ls
+ 1287  git status
+ 1288  cd con-server/
+ 1289  ls
+ 1290  cd .
+ 1291  cd
+ 1292  ls
+ 1293  vim main.py 
+ 1294  cd content-server/
+ 1295  ls
+ 1296  cd mon-app/
+ 1297  ls
+ 1298  vim end.sh 
+ 1299  vim input.py 
+ 1300  vim start.sh 
+ 1301  c ..
+ 1302  cd ..
+ 1303  ls
+ 1304  cd epe-testbed/
+ 1305  ls
+ 1306  cd con-server/
+ 1307  ls
+ 1308  vim DO
+ 1309  vim entrypoint.sh 
+ 1310  ls
+ 1311  cd 
+ 1312  ls
+ 1313  cp main.py epe-testbed/con-server/
+ 1314  ls
+ 1315  cd epe-testbed/
+ 1316  ls
+ 1317  git status
+ 1318  git add con-server/
+ 1319  ls
+ 1320  git status
+ 1321  vim docker-compose.kanaya.yml 
+ 1322  mv  docker-compose.kanaya.yml  ~/
+ 1323  ls
+ 1324  git status
+ 1325  git commit -m "kanaya con-server"
+ 1326  git push
+ 1327  git pull
+ 1328  ls
+ 1329  sudo -s
+ 1330  ls
+ 1331  cd 
+ 1332  ls
+ 1333  cd content-server/
+ 1334  ls
+ 1335  cd mon-app/
+ 1336  ls
+ 1337  vim start.sh 
+ 1338  vim end.sh 
+ 1339  cd ..
+ 1340  docker-compose exec bpm bash
+ 1341  docker ps
+ 1342  docker-compose exec bpm bash
+ 1343  ls
+ 1344  cd 
+ 1345  ls
+ 1346  cd epe-testbed/
+ 1347  docker-compose exec bpm bash
+ 1348  ./recreate.sh 
+ 1349  git pull
+ 1350  docker-compose build
+ 1351  python3
+ 1352  ./recreate.sh 
+ 1353  docker ps
+ 1354  docker-compose logs con1
+ 1355  ./recreate.sh 
+ 1356  docker-compose logs con1
+ 1357  ./recreate.sh 
+ 1358  docker-compose logs con1
+ 1359  ls
+ 1360  cd con-server/
+ 1361  ls
+ 1362  vim entrypoint.sh 
+ 1363  cd ..
+ 1364  docker-compose build
+ 1365  docker-compose up -d
+ 1366  docker-compose exec con1 bash
+ 1367  docker-compose logs con1
+ 1368  ./recreate.sh 
+ 1369  docker-compose logs con1
+ 1370  docker ps
+ 1371  docker-compose exec con1 bash
+ 1372  ./recreate.sh 
+ 1373  docker-compose logs
+ 1374  docker-compose logs con1
+ 1375  python3
+ 1376  ./recreate.sh 
+ 1377  docker-compose logs con1
+ 1378  docker-compose exec con1 bash
+ 1379  ./recreate.sh 
+ 1380  docker-compose logs con1 
+ 1381  cd con-server/
+ 1382  ls
+ 1383  vim entrypoint.sh 
+ 1384  git status
+ 1385  git checkout .
+ 1386  git sstatus
+ 1387  git status
+ 1388  cd ..
+ 1389  ./recreate.sh 
+ 1390  docker-compose logs con1 
+ 1391  docker-compose exec con1 bash
+ 1392  docker-compose logs con1 
+ 1393  git status
+ 1394  cd con-server/
+ 1395  git status
+ 1396  cd ..
+ 1397  docker rm -f $(docker ps)
+ 1398  docker rm -f $(docker ps -aq)
+ 1399  docker ps
+ 1400  ip a
+ 1401  docker-compose ps
+ 1402  git pull
+ 1403  docker-compose build
+ 1404  ./restart.sh 
+ 1405  docker-compose logs con1
+ 1406  docker-compose exec con1 bash
+ 1407  docker-compose logs con1
+ 1408  ls
+ 1409  cd con-server/
+ 1410  ls
+ 1411  vim main.py 
+ 1412  cd ..
+ 1413  ls
+ 1414  cd con-server/
+ 1415  ls
+ 1416  vim entrypoint.sh 
+ 1417  ls
+ 1418  cd ..
+ 1419  ./recreate.sh 
+ 1420  docker-compose ps
+ 1421  docker-compose logs
+ 1422  docker-compose logs con1
+ 1423  vim docker-compose.yml 
+ 1424  docker-compose logs con1
+ 1425  cd con-server/
+ 1426  git status
+ 1427  git diff entrypoint.sh
+ 1428  vim  entrypoint.sh
+ 1429  cd ..
+ 1430  ./recreate.sh 
+ 1431  docker-compose exec con1 bash
+ 1432  docker-compose logs con1
+ 1433  ./recreate.sh 
+ 1434  docker-compose exec con1 bash
+ 1435  docker-compose logs con1
+ 1436  docker-compose exec con1 bash
+ 1437  docker-compose ps
+ 1438  cd con-server/
+ 1439  git status
+ 1440  git checkout .
+ 1441  cd ..
+ 1442  ./recreate.sh 
+ 1443  docker-compose exec con1 bash
+ 1444  docker-compose logs con1
+ 1445  docker-compose exec con1 bash
+ 1446  ip netns list
+ 1447  ip a
+ 1448  ip netns list
+ 1449  ip netns add hoge
+ 1450  sudo ip netns add hoge
+ 1451  ip netns list hoge
+ 1452  echo $?
+ 1453  ip netns list fuga
+ 1454  echo $?
+ 1455  ip netns list 
+ 1456  ip netns show
+ 1457  ip netns show hoge
+ 1458  ip netns show fuga
+ 1459  ip netns show 
+ 1460  ip netns 
+ 1461  ip netns man
+ 1462  ip netns help
+ 1463  ip netns monitor
+ 1464  ks
+ 1465  ls
+ 1466  vim main.py 
+ 1467  cd content-server/
+ 1468  ks
+ 1469  ls
+ 1470  cd mon-app/
+ 1471  ls
+ 1472  vim input.py 
+ 1473  vim start.sh 
+ 1474  cd ..
+ 1475  ls
+ 1476  man tcpdump
+ 1477  vim start.sh 
+ 1478  ls
+ 1479  vim start.sh 
+ 1480  cd epe-testbed/con-server
+ 1481  ls
+ 1482  vim main.py 
+ 1483  ip netns list
+ 1484  sudo -s
+ 1485  ls
+ 1486  cd content-server/
+ 1487  ls
+ 1488  docker images
+ 1489  df -h
+ 1490  docker system prune
+ 1491  docker-compose exec client bash
+ 1492  ping 2001:db8:10:c1::1
+ 1493  ping 2001:db8:10:cccc::c1
+ 1494  docker-compose exec client bash
+ 1495  cd
+ 1496  cd epe-testbed/
+ 1497  ls
+ 1498  docker-compose exec client bash
+ 1499  docker-compose exec client con1
+ 1500  docker-compose exec con1 bash
+ 1501  cd
+ 1502  cd epe-testbed/
+ 1503  ls
+ 1504  docker-compose exec con1 bash
+ 1505  docker-compose exec client bash
+ 1506  docker-compose exec client bash 
+ 1507  docker-compose exec client ping 2001:db8:10:cccc::c1
+ 1508  fping google.com
+ 1509  fping google.com -l
+ 1510  man fping
+ 1511  fping google.com -C
+ 1512  fping  -C google.com
+ 1513  man fping
+ 1514  fping  -C 5  google.com
+ 1515  fping  -C 5  google.com -s
+ 1516  fping  -C 5  google.com -q
+ 1517  fping  -C 5  2001:4860:4860::8811 -q
+ 1518  fping  -t 0.1 -C 5  2001:4860:4860::8811 -q
+ 1519  fping  -t 0.1 -C 5  2001:4860:4860::8864 -q
+ 1520  fping  -t 50 -C 5  2001:4860:4860::8864 -q
+ 1521  man fping
+ 1522  fping  -t 250 -C 5  2001:4860:4860::8864 -q
+ 1523  fping  -t 250 -C 5  2001:4860:4860::8844 -q
+ 1524  fping  -t 250 -C 5  2001:4860:4860::8844 
+ 1525  fping  -t 450 -C 5  2001:4860:4860::8844 
+ 1526  fping  -i 1 -t 450 -C 5  2001:4860:4860::8844 
+ 1527  fping  -i 20 -t 450 -C 5  2001:4860:4860::8844 
+ 1528  fping  -i 40 -t 450 -C 5  2001:4860:4860::8844 
+ 1529  fping  -i 100 -t 450 -C 5  2001:4860:4860::8844 
+ 1530  fping -r 2  -i 100 -t 450 -C 5  2001:4860:4860::8844 
+ 1531  sudo fping -r 2  -i 100 -t 450 -C 5  2001:4860:4860::8844 
+ 1532  sudo fping  -i1 -r1 -t20 -C 5  2001:4860:4860::8844 
+ 1533  sudo fping  -i1 -r1 -t20 -C 5  2001:4860:4860::8844  -q
+ 1534  sudo fping -t 20 -C 5  2001:4860:4860::8844  -q
+ 1535  python3
+ 1536  ls
+ 1537  cd epe-testbed/
+ 1538  ls
+ 1539  vim tools/eval1-add-delay.sh 
+ 1540  docker-compose exec rt1 tc qdisc add dev eth1 root netem delay 10ms
+ 1541  docker-compose exec rt1  -u root tc qdisc add dev eth1 root netem delay 10ms
+ 1542  docker-compose exec -u root  rt1  tc qdisc add dev eth1 root netem delay 10ms
+ 1543  docker-compose exec rt0 bash
+ 1544  docker-compose exec con1 bash
+ 1545  docker-compose exec client ping 2001:db8:cccc:c1::1
+ 1546  cd epe-testbed/
+ 1547  docker-compose exec client ping 2001:db8:cccc::c1
+ 1548  docker-compose exec client ping 2001:db8:10:cccc::c1
+ 1549  cd epe-testbed/
+ 1550  ./recreate.sh 
+ 1551  docker-compose logs con1
+ 1552  ls
+ 1553  cd epe-bp-manager/
+ 1554  ls
+ 1555  cd ..
+ 1556  cd con-server/
+ 1557  ls
+ 1558  vim main.py 
+ 1559  cd ..
+ 1560  ./recreate.sh 
+ 1561  docker-compose logs con1
+ 1562  vim main.py 
+ 1563  cd epe-bp-manager/
+ 1564  ls
+ 1565  vim main.py 
+ 1566  git status
+ 1567  cd ..
+ 1568  git status
+ 1569  git diff docker-compose.eval1.yml
+ 1570  git checkout .
+ 1571  git status
+ 1572  ./recreate.sh 
+ 1573  docker-compose logs
+ 1574  docker-compose logs con1
+ 1575  ./recreate.sh 
+ 1576  docker-compose logs con1
+ 1577  ./recreate.sh 
+ 1578  docker-compose logs con1
+ 1579  ./recreate.sh 
+ 1580  docker-compose logs con1
+ 1581  ls
+ 1582  cd
+ 1583  ls
+ 1584  cd content-server/
+ 1585  ls
+ 1586  cd mon-app/
+ 1587  ls
+ 1588  vim start.sh 
+ 1589  cd 
+ 1590  ip a
+ 1591  ls
+ 1592  vim start.sh 
+ 1593  tcpdump -nl 
+ 1594  sudo tcpdump -nl 
+ 1595  sudo tcpdump -nla
+ 1596  sudo tcpdump -nla -v
+ 1597  ip -br a
+ 1598  sudo tcpdump -nla -i ens192
+ 1599  sudo tcpdump -nla -i ens192 -s 50
+ 1600  sudo tcpdump -nla -i ens192 -s 96
+ 1601  sudo tcpdump -nla -i ens192 -s 48
+ 1602  sudo tcpdump -nla -i ens192 -s 90
+ 1603  sudo tcpdump -nla -i ens192 -s 70
+ 1604  man tcpdump 
+ 1605  sudo tcpdump -nla -i ens192 -s 40
+ 1606  sudo tcpdump -nla -i ens192 -s 64
+ 1607  sudo tcpdump -nla -i ens192 -s 60
+ 1608  sudo tcpdump -nla -i ens192 -s 56
+ 1609  sudo tcpdump -nla -i ens192 -s 96
+ 1610  sudo tcpdump ip6
+ 1611  sudo tcpdump ip6 -i ens192
+ 1612  sudo tcpdump ip6 -i ens192 -nl
+ 1613  sudo tcpdump ip6 -i ens192 -nla
+ 1614  sudo tcpdump ip6 -i ens192 -nl
+ 1615  sudo tcpdump ip6 -i ens192 -nl -s 20
+ 1616  sudo tcpdump ip6 -i ens192 -nl -s 60
+ 1617  sudo tcpdump ip6 -i ens192 -nl -s 56
+ 1618  sudo tcpdump ip6 -i ens192 -nl -s 58
+ 1619  sudo tcpdump ip6 -i ens192 -nl -s 57
+ 1620  sudo tcpdump ip6 -i ens192 -nl
+ 1621  sudo -s
+ 1622  cd epe-testbed/
+ 1623  ./recreate.sh 
+ 1624  docker-compose logs con1 
+ 1625  ./recreate.sh 
+ 1626  docker-compose logs con1 
+ 1627  docker-compose exec con1 bash
+ 1628  docker-compose logs con1 
+ 1629  ./recreate.sh 
+ 1630  docker-compose exec con1 bash
+ 1631  docker-compose logs con1
+ 1632  ./recreate.sh 
+ 1633  docker-compose logs con1
+ 1634  ./recreate.sh 
+ 1635  docker-compose logs con1
+ 1636  ./recreate.sh 
+ 1637  docker-compose logs con1
+ 1638  sudo -s
+ 1639  docker-compose logs con1
+ 1640  docker-compose build
+ 1641  git pull
+ 1642  docker-compose build
+ 1643  ./recreate.sh 
+ 1644  tshark -l ens192
+ 1645  sudo tshark -l ens192
+ 1646  sudo tshark -l -i ens192
+ 1647  man tshark
+ 1648  sudo tshark -l -i ens192
+ 1649  sudo -s
+ 1650  ./recreate.sh 
+ 1651  docker-compose exec con1 bash
+ 1652  ./recreate.sh 
+ 1653  docker-compose logs con1
+ 1654  ./recreate.sh 
+ 1655  docker-compose logs con1
+ 1656  ./recreate.sh 
+ 1657  docker-compose logs con1
+ 1658  ping -6 -c 3 -i 0.2 2001:4860:4860::8888
+ 1659  ping -6 -c 3 -i 0.1 2001:4860:4860::8888
+ 1660  ping -6 -c 3 -i 0.2 2001:4860:4860::8888
+ 1661  fping
+ 1662  sudo -s
+ 1663  docker-compose exec con1 bash
+ 1664  ./recreate.sh 
+ 1665  docker-compose logs bash
+ 1666  docker-compose logs con1
+ 1667  ./recreate.sh 
+ 1668  docker-compose logs con1
+ 1669  ./recreate.sh 
+ 1670  docker-compose logs con1
+ 1671  ./recreate.sh 
+ 1672  docker-compose logs con1
+ 1673  cd con-server/
+ 1674  ls
+ 1675  vim main.py 
+ 1676  git status
+ 1677  cd ..
+ 1678  git pull
+ 1679  ./recreate.sh 
+ 1680  docker-compose logs con1
+ 1681  ./recreate.sh 
+ 1682  docker-compose logs con1
+ 1683  ./recreate.sh 
+ 1684  docker-compose logs con1
+ 1685  ./recreate.sh 
+ 1686  docker-compose logs con1
+ 1687  ./recreate.sh 
+ 1688  docker-compose logs con1
+ 1689  docker-compose exec  con1 bash
+ 1690  ip netns exec mon
+ 1691  ip netns exec mon ls
+ 1692  docker-compose exec  con1 bash
+ 1693  ./recreate.sh 
+ 1694  docker-compose exec  con1 bash
+ 1695  docker-compose logs con1
+ 1696  docker-compose exec  con1 bash
+ 1697  ./recreate.sh 
+ 1698  docker-compose exec  con1 bash
+ 1699  docker-compose exec  logs con1
+ 1700  docker-compose logs con1
+ 1701  ./recreate.sh 
+ 1702  docker-compose logs con1
+ 1703  ping -c 5 8.8.8.8 | tail -1 | tee >(cut -d/ -f5) > /dev/null
+ 1704  ping -c 5 2001:4860:4860::8888 | tail -1 | tee >(cut -d/ -f5) > /dev/null
+ 1705  docker-compose logs con1
+ 1706  ./recreate.sh 
+ 1707  docker-compose logs con1
+ 1708  ./recreate.sh 
+ 1709  docker-compose logs con1
+ 1710  ./recreate.sh 
+ 1711  docker-compose logs con1
+ 1712  ./recreate.sh 
+ 1713  docker-compose logs con1
+ 1714  ./recreate.sh 
+ 1715  docker-compose logs con1
+ 1716  docker-compose logs con1  -f
+ 1717  docker-compose logs con1 -f
+ 1718  docker-compose logs con1 -f tail
+ 1719  docker-compose logs con1 
+ 1720  ./recreate.sh 
+ 1721  docker-compose logs con1 
+ 1722  docker-compose logs -f con1 
+ 1723  ./recreate.sh 
+ 1724  docker-compose logs -f con1 
+ 1725  docker-compose exec con1 mon
+ 1726  docker-compose exec con1 bash
+ 1727  ./recreate.sh 
+ 1728  docker-compose exec con1 bash
+ 1729  docker-compose logs -f con1 
+ 1730  ping 1.1.1.1 -c 0.1
+ 1731  ping 1.1.1.1 -c 1
+ 1732  ping 2001:4860:4860::8888 -c 1
+ 1733  ping 2001:4860:4860::8888 -c 1 | grep rtt
+ 1734  ping 2001:4860:4860::8844 -c 1 | grep rtt | 
+ 1735  ping 2001:4860:4860::8844 -c 1 | grep rtt 
+ 1736  ping 2001:4860:4860::8845 -c 1 | grep rtt 
+ 1737  ./recreate.sh 
+ 1738  docker-compose logs -f con1 
+ 1739  git status
+ 1740  vim con-server/entrypoint.sh 
+ 1741  git diff  con-server/entrypoint.sh 
+ 1742  git log
+ 1743  ./recreate.sh 
+ 1744  docker-compose logs -f con1 
+ 1745  ./recreate.sh 
+ 1746  docker-compose logs -f con1 
+ 1747  ./recreate.sh 
+ 1748  docker-compose logs -f con1 
+ 1749  ./recreate.sh 
+ 1750  docker-compose logs -f con1 
+ 1751  ./recreate.sh 
+ 1752  docker-compose logs -f con1 
+ 1753  ls
+ 1754  vim docker-compose.yml 
+ 1755  docker-compose logs -f con1 
+ 1756  ./recreate.sh 
+ 1757  docker-compose logs -f con1 
+ 1758  ./recreate.sh 
+ 1759  git checkout .
+ 1760  ./recreate.sh 
+ 1761  docker-compose logs -f con1 
+ 1762  ./recreate.sh 
+ 1763  docker-compose logs -f con1 
+ 1764  cd epe-testbed/
+ 1765  docker-compose exec con1 bash
+ 1766  cd epe-testbed/
+ 1767  git pull
+ 1768  ls
+ 1769  vim docker-compose.yml 
+ 1770  docker-compose build
+ 1771  docker ps
+ 1772  ./recreate.sh 
+ 1773  docker-compose logs con1
+ 1774  docker ps
+ 1775  docker-compose ps
+ 1776  ./recreate.sh 
+ 1777  ls
+ 1778  docker-compose logs 
+ 1779  docker-compose logs  con1
+ 1780  ./recreate.sh 
+ 1781  docker-compose logs
+ 1782  docker-compose logs con1
+ 1783  ./recreate.sh 
+ 1784  ls
+ 1785  cd content-server/
+ 1786  ls
+ 1787  cd mon-app/
+ 1788  ls
+ 1789  cd
+ 1790  ls
+ 1791  cd epe-testbed/
+ 1792  ls
+ 1793  docker ls
+ 1794  docker container ls
+ 1795  vim docker-compose.
+ 1796  vim docker-compose.yml 
+ 1797  ls
+ 1798  cd db
+ 1799  ls
+ 1800  vim db.json 
+ 1801  cd gob
+ 1802  cd ..
+ 1803  cd gobgp/
+ 1804  ls
+ 1805  vim entrypoint.sh 
+ 1806  vim Dockerfile 
+ 1807  docker exec -it epe-testbed_bpm_1 bash
+ 1808  ls
+ 1809  cd epe-testbed/
+ 1810  ls
+ 1811  cd gobgp/
+ 1812  ls
+ 1813  cd ..
+ 1814  ls
+ 1815  grep -r "TinyDB" ./
+ 1816  cd epe-bp-manager/
+ 1817  ls
+ 1818  ls | grep epe
+ 1819  cd .
+ 1820  cd ..
+ 1821  docker container ls
+ 1822  docker exec -it epe-testbed_bpm_1 bash
+ 1823  docker exec -it epe-testbed_bpm_1 cat db.json | jq .
+ 1824  docker exec -it epe-testbed_bpm_1 cat sids-table.json | jq .
+ 1825  git remote -v
+ 1826  l
+ 1827  cd epe-testbed/
+ 1828  ls
+ 1829  docker exec -it epe-testbed_bpm_1 bash
+ 1830  cd .ssh
+ 1831  ls
+ 1832  cat authorized_keys 
+ 1833  curl https://github.com/yfskyline.keys >> authorized_keys 
+ 1834  exit
+ 1835  sudo -s
+ 1836  sudo -s
+ 1837  ip a
+ 1838  cd epe-testbed/
+ 1839  sudo -s
+ 1840  ip -6 route
+ 1841  sudo -s
+ 1842  cd
+ 1843  ls
+ 1844  vim seg6_ecmp.sh
+ 1845  sudo -s
+ 1846  clea
+ 1847  clear
+ 1848  sudo -s
+ 1849  ls
+ 1850  vim seg6_ecmp.sh 
+ 1851  ip -V
+ 1852  sudo bash
+ 1853  exit
+ 1854  clear
+ 1855  clear
+ 1856  gobgp global rib
+ 1857  ls
+ 1858  cat docker-compose.kanaya.yml 
+ 1859  clear
+ 1860  sudo docker ps 0a
+ 1861  sudo docker ps -a
+ 1862  clear
+ 1863  sudo -E gobgpd yaml -f gobgpd.yml
+ 1864  clear
+ 1865  ls
+ 1866  clear
+ 1867  ls
+ 1868  exit
+ 1869  ls
+ 1870  cd /etc/netplan/
+ 1871  ls
+ 1872  sudo -s
+ 1873  w
+ 1874  sudo -s
+ 1875  clear
+ 1876  ls
+ 1877  cat main.py 
+ 1878  clear
+ 1879  ls
+ 1880  gobgp
+ 1881  clear
+ 1882  ip a
+ 1883  ip a
+ 1884  ip adr show
+ 1885  ip a
+ 1886  sudo -s
+ 1887  ls
+ 1888  mkdir network-tester
+ 1889  cd network-tester/
+ 1890  ls
+ 1891  sudo -s
+ 1892  ip a
+ 1893  ls
+ 1894  git clone git@github.com:wide-vsix/nfv-kit
+ 1895  ls
+ 1896  cd nfv-kit/
+ 1897  ls
+ 1898  cd ns/
+ 1899  ls
+ 1900  cd docker/
+ 1901  ls
+ 1902  vim daemon.json 
+ 1903  cd ..
+ 1904  ls
+ 1905  vim setup.sh 
+ 1906  ip a
+ 1907  sudo -s
+ 1908  docker run -it ubuntu:20.04 bash
+ 1909  docker run -it yasnyan/nfv-kit:latest bash
+ 1910  docker run -it yasnyan/frr-ubuntu20:latest  bash
+ 1911  ip a
+ 1912  cd /etc/ssh/
+ 1913  ls
+ 1914  cd sshd_config.d/
+ 1915  ls
+ 1916  cd ..
+ 1917  ls -lah
+ 1918  w
+ 1919  whoami
+ 1920  sudo sysctl -a
+ 1921  sudo sysctl -a | grep net.ipv6.flow
+ 1922  ip a
+ 1923  sudo sysctl -a | grep net.ipv6.conf.
+ 1924  ls
+ 1925  cd content-server/
+ 1926  ls
+ 1927  cd mon-app/
+ 1928  date
+ 1929  ls -ah
+ 1930  ls -lah
+ 1931  mkdir seg6_mand
+ 1932  cd seg6_mand
+ 1933  ls
+ 1934  vim param.txt
+ 1935  cat param.txt 
+ 1936  cd
+ 1937  sudo useeradd -m skyline
+ 1938  sudo useradd -m skyline
+ 1939  sudo -s
+ 1940  exit
+ 1941  w
+ 1942  ls
+ 1943  cd
+ 1944  ls
+ 1945  cat seg6_ecmp.sh 
+ 1946  cd content-server/
+ 1947  ls
+ 1948  cd mon-app/
+ 1949  ls
+ 1950  cat start.sh 
+ 1951  cat input.py 
+ 1952  ls
+ 1953  cat end.sh 
+ 1954  ls
+ 1955  ..
+ 1956  ls
+ 1957  ..
+ 1958  l
+ 1959  cd ../
+ 1960  ls
+ 1961  cd ../
+ 1962  ls
+ 1963  cd /home
+ 1964  ls
+ 1965  sudo sysctl -n ipv6.flowlabel_reject
+ 1966  sudo sysctl -n ipv6.flowlabel_reflect
+ 1967  sudo sysctl -n net.ipv6.flowlabel_reflect
+ 1968  sudo sysctl -n net.ipv6.flowlabel_reject
+ 1969  sudo sysctl -n net.ipv6.conf.ens192.seg6_enabled
+ 1970  sudo sysctl net.ipv6.conf.ens192.seg6_enabled
+ 1971  sudo sysctl -w net.ipv6.conf.all.seg6_enabled=1
+ 1972  sudo sysctl net.ipv6.conf.all.seg6_enabled
+ 1973  sudo sysctl net.ipv6.conf.ens192.seg6_enabled
+ 1974  sudo sysctl -w net.ipv6.conf.ens192.seg6_enabled=1
+ 1975  sudo sysctl net.ipv6.conf.ens192.seg6_enabled
+ 1976  cd
+ 1977  cd content-server/
+ 1978  ls
+ 1979  cd mon-app/
+ 1980  ls
+ 1981  mv seg6_mand/ ../
+ 1982  ls
+ 1983  cd ../
+ 1984  ls
+ 1985  cd seg6_mand/
+ 1986  ls
+ 1987  cat param.txt 
+ 1988  sudo sysctl net.ipv6.conf.default.seg6_enabled=1
+ 1989  sudo sysctl net.ipv6.conf.default.seg6_enabled
+ 1990  sudo sysctl net.ipv6.conf.all.seg6_enabled
+ 1991  sudo sysctl net.ipv6.conf.default.seg6_enabled
+ 1992  sudo sysctl net.ipv6.conf.ens192.seg6_enabled
+ 1993  sudo sysctl -a | grep flowlabel
+ 1994  sudo -s
+ 1995  ls
+ 1996  cd ../
+ 1997  ls
+ 1998  cd
+ 1999  ls
+ 2000  exit
+ 2001  history
+ 2002  history > his.txt
+ 2003  sudo history > his.txt
+ 2004  sudo history >> his.txt
+ 2005  history >> his.txt
