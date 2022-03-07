@@ -139,13 +139,8 @@ function addRoute (prefix, sids, preferSid) {
 	console.log(sids);
 	console.log(preferSid);
 }
-let command = 'ip -6 route add';
-let prefix = '::/0';
 let sid = '2001:db8:1111:ffff::2';
-let sids = ['0', '1'];
 //addRoute(prefix, sids, sid);
-let commandResult = execSync('ip -6 route show');
-if (options.debug) { console.log(`$ ip -6 route show: \n${stdout.toString()}`); }
 // 既存の経路があったときにうまく処理する
 
 // get sids[] using prefix
