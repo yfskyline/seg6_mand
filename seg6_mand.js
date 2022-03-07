@@ -66,6 +66,23 @@ if (options.debug) {console.log(`$ ip -6 route show: \n${stdout.toString()}`);}
 
 
 // 最新の経路の取得(from rtt_db)
+// MySQLに接続
+const connection = mysql.createConnection({
+	host: 'localhost',
+	port: 13306,
+	user: 'root',
+	password: 'root',
+	database: 'rtt_db'
+});
+
+connection.connect();
+connection.query('SELECT "Hello World!" AS text', (error, results, fields) => {
+	if (error) throw error;
+	console.log(results[0].text);
+
+});
+connection.end();
+
 // ファイルから最後に読み込んだ経路のidを読み込み
 // id以上のrowを全て取得
 
