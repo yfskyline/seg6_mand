@@ -53,12 +53,16 @@ if(options.help) {
 
 if (options.debug) { console.log("*******DEBUG MODE********"); }
 
-// 変数宣言
-// イプシロングリーディのイプシロンの値
+// Variable Declaration
+// epsilong greedy algorithm's parameter
 if (options.debug) {console.log('epsilon: ' + options.epsilon);}
 
 // PassiveRTTが何も取得できていない場合に用いるデフォルトSID
 if (options.debug) {console.log('default SID: ' + options.sid);}
+
+// read the last rtt_db id got from file
+const lastId = parseInt(fs.readFileSync("lastId.txt", {encoding: 'utf-8'}));
+if (options.debug) { console.log('lastId: ' + lastId); }
 
 // Current Routes
 const stdout = execSync('ip -6 route show');
@@ -73,18 +77,29 @@ const connection = mysql.createConnection({
 	port: 13306,
 	user: 'root',
 	password: 'root',
-	database: 'rtt_db'
+	database: 'rtt_db',
+	timezone: 'jst'
 });
 
 connection.connect();
-connection.query('SELECT "Hello World!" AS text', (error, results, fields) => {
+connection.query('SELECT * FROM `prefix_sid_rtt` WHERE id > ' + lastId, (error, results, fields) => {
 	if (error) throw error;
-	console.log(results[0].text);
+	console.log(results[0]);
+	console.log(results[0].id);
+	console.log(results[0].dest_prefix);
+	console.log(results[0].sid);
+	console.log(results[0].rtt);
+	console.log('results.length' + results[results.length-1].id);
+	// write the current id to the file
+	fs.writeFileSync("lastId.txt", results[results.length-1].id.toString(), 'utf-8', (err) =>{
+		if (err) {
+			console.log(err);
+		}
+	});
 
 });
 connection.end();
 
-// ファイルから最後に読み込んだ経路のidを読み込み
 // id以上のrowを全て取得
 
 
