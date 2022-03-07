@@ -138,14 +138,26 @@ let command = 'ip -6 route add';
 let prefix = '::/0';
 let sid = '2001:db8:1111:ffff::2';
 let sids = ['0', '1'];
-addRoute(prefix, sids, sid);
+//addRoute(prefix, sids, sid);
 let commandResult = execSync('ip -6 route show');
 if (options.debug) { console.log(`$ ip -6 route show: \n${stdout.toString()}`); }
 // 既存の経路があったときにうまく処理する
-// prefixとsidリストとコストを引数で取る
+
+// get sids[] using prefix
+async function getSids(prefix) {
+	//await client.put('foo').value('bar');
+	//const fooValue = await client.get('foo').string();
+	const sids = await client.get(prefix).string();
+	console.log('sids are:', sids);
+	return sids;
+	//const allFValues = await client.getAll().prefix('f').keys();
+	//console.log('all our keys starting with "f":', allFValues);
+	//await client.delete().all();
+}
+
 
 // 既存の経路のsidの優先順位が逆転した場合にイプシロングリーディのベストSIDを入れ替える関数
-console.log(options.epsilon);
+//console.log(options.epsilon);
 // prefixを引数にしてetcdから該当するprefix_sid_listを取得する関数
 
 if (options.debug) { console.log("*******DEBUG MODE********"); }
