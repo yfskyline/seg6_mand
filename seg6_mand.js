@@ -133,7 +133,7 @@ connection.end();
 
 // 複数のprefix_sidをipコマンドで埋め込む関数
 function addRoute (prefix, sids, preferSid) {
-	console.log('ADDROUTE');
+	console.log('======ADDED ROUTE=======');
 	console.log(prefix);
 	console.log(sids);
 	console.log(preferSid);
