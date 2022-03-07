@@ -52,6 +52,7 @@ if(options.help) {
 }
 
 if (options.debug) { console.log("*******DEBUG MODE********"); }
+
 // 変数宣言
 // イプシロングリーディのイプシロンの値
 if (options.debug) {console.log('epsilon: ' + options.epsilon);}
@@ -59,14 +60,14 @@ if (options.debug) {console.log('epsilon: ' + options.epsilon);}
 // PassiveRTTが何も取得できていない場合に用いるデフォルトSID
 if (options.debug) {console.log('default SID: ' + options.sid);}
 
-// 現在の経路
+// Current Routes
 const stdout = execSync('ip -6 route show');
 if (options.debug) { console.log("*******CURRENT ROUTE********"); }
 if (options.debug) {console.log(`$ ip -6 route show: \n${stdout.toString()}`);}
 
 
-// 最新の経路の取得(from rtt_db)
-// MySQLに接続
+// Get new prefix/sid/rtt from rtt_db
+// Connect to MySQL
 const connection = mysql.createConnection({
 	host: 'localhost',
 	port: 13306,
