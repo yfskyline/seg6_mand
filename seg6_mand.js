@@ -88,37 +88,41 @@ connection.connect();
 // get all rows with ID greater than lastID
 connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId, (error, results, fields) => {
 	if (error) throw error;
-	results.forEach(function(result) {
-		if (options.debug) {
-			console.log(result);
-			console.log('result.id: ' + result.id);
-			console.log('results.dst_prefix: ' + result.dest_prefix);
-			console.log('results.sid: ' + result.sid);
-			console.log('results.rtt: ' + result.rtt);
-		}
+	if (!results.length) {
+		console.log('THERE IS NO NEW PREFIX');
+		return;
+	} else {
+		results.forEach(function(result) {
+			if (options.debug) {
+				console.log(result);
+				console.log('result.id: ' +  result.id);
+				console.log('results.dst_prefix: ' + result.dest_prefix);
+				console.log('results.sid: ' + result.sid);
+				console.log('results.rtt: ' + result.rtt);
+			}
 
-		// sidがNULLかどうか
-		if (result.sid === null) {
-			console.log('NULL!!!');
-			// etcdから該当prefixの一覧を取得する
-			// getSid(prefix)
-			// デフォルトSIDを優先して(もしくは適当にどちらかを優先して)経路を埋め込む
-			// addRoute(prefix, sids, preferSid);
-		} else {
-			// rtt_dbから同じprefix/sidを持つrowの中からidが最大のものをそれぞれ取得
-			// 全てのprefix/sidの中でRTTが最小のsidを取得
-			// addRoute(prefix, sids, preferSid);
-			console.log('NOT NULL SID!');
-		}
-	});
-	console.log('=======Processed ' + results[results.length-1].id + ' Prefix========');
-	// write the current id to the file
-	fs.writeFileSync("lastId.txt", results[results.length-1].id.toString(), 'utf-8', (err) =>{
-		if (err) {
-			console.log(err);
-		}
-	});
-
+			// sidがNULLかどうか
+			if (result.sid === null) {
+				console.log('NULL!!!');
+				// etcdから該当prefixの一覧を取得する
+				// getSid(prefix)
+				// デフォルトSIDを優先して(もしくは適当にどちらかを優先して)経路を埋め込む
+				// addRoute(prefix, sids, preferSid);
+			} else {
+				// rtt_dbから同じprefix/sidを持つrowの中からidが最大のものをそれぞれ取得
+				// 全てのprefix/sidの中でRTTが最小のsidを取得
+				// addRoute(prefix, sids, preferSid);
+				console.log('NOT NULL SID!');
+			}
+		});
+		console.log('=======Processed ' + results[results.length-1].id + ' Prefix========');
+		// write the current id to the file
+		fs.writeFileSync("lastId.txt", results[results.length-1].id.toString(), 'utf-8', (err) =>{
+			if (err) {
+				console.log(err);
+			}
+		});
+	}
 });
 connection.end();
 
