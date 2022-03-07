@@ -5,6 +5,7 @@ const fs = require('fs');
 const mysql = require('mysql');
 const { Etcd3 } = require('etcd3');
 const client = new Etcd3({ hosts: ['http://epe-manager.fujisawa.vsix.wide.ad.jp:2379'] });
+const crypto = require('crypto');
 
 const optionDefinitions = [
         {
@@ -152,17 +153,29 @@ async function getSids(prefix) {
 	//await client.put('foo').value('bar');
 	//const fooValue = await client.get('foo').string();
 	const sids = await client.get(prefix).string();
-	console.log('sids are:', sids);
-	return sids;
+	sidsList = sids.split(',');
+	console.log('sids are:', sidsList);
+	return sids.split(',');
 	//const allFValues = await client.getAll().prefix('f').keys();
 	//console.log('all our keys starting with "f":', allFValues);
 	//await client.delete().all();
 }
 
+// ha
 
 // 既存の経路のsidの優先順位が逆転した場合にイプシロングリーディのベストSIDを入れ替える関数
 //console.log(options.epsilon);
 // prefixを引数にしてetcdから該当するprefix_sid_listを取得する関数
+
+
+// ハッシュをとって数字8桁にする関数
+function eightHash(str) {
+        const md5 = crypto.createHash('md5');
+        let temp = md5.update(str, 'binary').digest('hex');
+        temp = String(parseInt(temp.replace(/[^0-9]/g, '').slice(-8)));
+        return temp;
+}
+
 
 // 最終的な現在の経路を表示
 if (options.debug) {
