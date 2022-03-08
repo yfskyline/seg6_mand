@@ -246,7 +246,7 @@ function eightHash(str) {
 }
 
 async function registerPrefix(prefix) {
-  const sids = await client.put("/epe/content-servers-prefixes/camp.vsix.wide.ad.jp/" + prefix.replace("/", "_")).value('“active” : “true”');
+  const sids = await client.put("/epe/content-servers-prefixes/camp.vsix.wide.ad.jp/" + prefix.replace("/", "_")).value('{“active”: true}');
   return;
 }
 
@@ -274,10 +274,9 @@ function pushUsedPrefix() {
 	console.log("updateEtcd()");
 	}
 	// rtt_dbから使用されたPrefixの一覧を取得
-	//let test = getNewPrefix();
 	(async () => {
-	  let testE = await getNewPrefix();
-	  console.log(testE);
+	  let newPrefixes = await getNewPrefix();
+	  console.log(newPrefixes);
 	})();
 
 	// etcdにregisterPrefix()
