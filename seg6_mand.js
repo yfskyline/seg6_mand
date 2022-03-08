@@ -74,9 +74,7 @@ if (options.debug) { console.log(`$ ip -6 route show: \n${stdout.toString()}`); 
 
 
 // Get new prefix/sid/rtt from rtt_db
-// Connect to MySQL
-
-//const connection = mysql.createConnection({
+// Create connection Pool to MySQL
 const pool = mysql.createPool({
 	connectionLimit: 20,
 	host: 'localhost',
@@ -89,79 +87,78 @@ const pool = mysql.createPool({
 
 // get all rows with ID greater than lastID
 pool.getConnection(function(err, connection) {
-connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId, (error, results) => {
-	if (error) throw error;
-	if (!results.length) {
-		console.log('THERE IS NO NEW PREFIX');
-		return;
-	} else {
-		results.forEach(function(result) {
-			if (options.debug) {
-				console.log(result);
-				console.log('result.id: ' +  result.id);
-				console.log('result.dst_prefix: ' + result.dst_prefix);
-				console.log('result.sid: ' + result.sid);
-				console.log('result.rtt: ' + result.rtt);
-			}
+	connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId, (error, results) => {
+		if (error) throw error;
+		if (!results.length) {
+			console.log('THERE IS NO NEW PREFIX');
+			return;
+		} else {
+			results.forEach(function(result) {
+				if (options.debug) {
+					console.log(result);
+					console.log('result.id: ' +  result.id);
+					console.log('result.dst_prefix: ' + result.dst_prefix);
+					console.log('result.sid: ' + result.sid);
+					console.log('result.rtt: ' + result.rtt);
+				}
 
-			// sidがNULLかどうか
-			if (result.sid === null) {
-				console.log('NULL!!!');
-				// nullだったら，etcdからそのprefixの全てのsidを取得
-				// 取得したprefixの1つ目はweightedECMPの優先側として経路をreplace
+				if (result.sid === null) {
+					console.log('NULL!!!');
+					// etcdからそのprefixの全てのsidを取得
+					// 取得したprefixの1つ目はweightedECMPの優先側として経路をreplace
 
-				// get sids corresponding to dst_prefix from etcd
-				(async() =>{
-					let test = await getSids(result.dst_prefix.replace('/','_'));
-					let parsed = JSON.parse(test);
+					// get sids corresponding to dst_prefix from etcd
+					(async() =>{
+						let test = await getSids(result.dst_prefix.replace('/','_'));
+						let parsed = JSON.parse(test);
 
-					parsed.forEach(function(e) {
-						let command = 'sudo ip -6 nexthop replace id ' + eightHash(e.sid) + ' encap seg6 mode encap segs ' + e.sid + ' dev ens192 proto 200';
+						parsed.forEach(function(e) {
+							let command = 'sudo ip -6 nexthop replace id ' + eightHash(e.sid) + ' encap seg6 mode encap segs ' + e.sid + ' dev ens192 proto 200';
+							execSync(command);
+						});
+						// 最初のSIDのweightを7にしてNH-Groupを作成する
+						let groupContents = '';
+						for (i = 1; i < parsed.length; i++) {
+							groupContents += eightHash(parsed[i].sid);
+							groupContents += ',1/';
+						}
+						let command = 'sudo ip nexthop replace id ' + eightHash(result.dst_prefix) + ' group ' + eightHash(parsed[0].sid) + ',7/' + groupContents.slice(0,-1) +  ' proto 200';
 						execSync(command);
-					});
-					// 最初のSIDのweightを7にしてNH-Groupを作成する
-					let groupContents = '';
-					for (i = 1; i < parsed.length; i++) {
-						groupContents += eightHash(parsed[i].sid);
-						groupContents += ',1/';
-					}
-					let command = 'sudo ip nexthop replace id ' + eightHash(result.dst_prefix) + ' group ' + eightHash(parsed[0].sid) + ',7/' + groupContents.slice(0,-1) +  ' proto 200';
-					execSync(command);
-					// result.dst_prefix宛の経路を作成したNH-Groupにreplaceする
-					command = 'sudo ip -6 route replace ' + result.dst_prefix + ' nhid ' + eightHash(result.dst_prefix) + ' proto 200';
-				})()
+						// result.dst_prefix宛の経路を作成したNH-Groupにreplaceする
+						command = 'sudo ip -6 route replace ' + result.dst_prefix + ' nhid ' + eightHash(result.dst_prefix) + ' proto 200';
+					})()
 
-				// addRoute(prefix, sids, preferSid);
-			} else {
-				// rtt_dbから同じprefix/sidを持つrowの中からidが最大のものをそれぞれ取得
-				// 全てのprefix/sidの中でRTTが最小のsidを取得
-				// addRoute(prefix, sids, preferSid);
-				console.log('NOT NULL SID!');
-				// 該当するprefixのsid/rttをMySQLから取得して，各sidでidが一番大きいものを取得
-				let query = 'select * from `rtt_db`.`prefix_sid_rtt` WHERE sid = "' + result.sid + '" AND dst_prefix = "' + result.dst_prefix + '" AND sid != "NULL" ORDER BY id DESC LIMIT 1;'
-				console.log(query);
-				connection.query(query, (error, results) => {
-					console.log(results);
-				});
-				(async() =>{
-					let test = await getSids(result.dst_prefix.replace('/','_'));
-					let parsed = JSON.parse(test);
-
-					parsed.forEach(function(e) {
+					// addRoute(prefix, sids, preferSid);
+				} else {
+					// rtt_dbから同じprefix/sidを持つrowの中からidが最大のものをそれぞれ取得
+					// 全てのprefix/sidの中でRTTが最小のsidを取得
+					// addRoute(prefix, sids, preferSid);
+					console.log('NOT NULL SID!');
+					// 該当するprefixのsid/rttをMySQLから取得して，各sidでidが一番大きいものを取得
+					let query = 'select * from `rtt_db`.`prefix_sid_rtt` WHERE sid = "' + result.sid + '" AND dst_prefix = "' + result.dst_prefix + '" AND sid != "NULL" ORDER BY id DESC LIMIT 1;'
+					console.log(query);
+					connection.query(query, (error, results) => {
+						console.log(results);
 					});
-				})();
-			}
-		});
-		console.log('=======Processed ' + results[results.length-1].id + ' Prefix========');
-		// write the current id to the file
-		fs.writeFileSync("lastId.txt", results[results.length-1].id.toString(), 'utf-8', (err) =>{
-			if (err) {
-				console.log(err);
-			}
-		});
-	}
-});
-				connection.release();
+					(async() =>{
+						let test = await getSids(result.dst_prefix.replace('/','_'));
+						let parsed = JSON.parse(test);
+
+						parsed.forEach(function(e) {
+						});
+					})();
+				}
+			});
+			console.log('=======Processed ' + results[results.length-1].id + ' Prefix========');
+			// write the current id to the file
+			fs.writeFileSync("lastId.txt", results[results.length-1].id.toString(), 'utf-8', (err) =>{
+				if (err) {
+					console.log(err);
+				}
+			});
+		}
+	});
+	connection.release();
 });
 
 
@@ -173,13 +170,7 @@ function addRoute (prefix, sids, preferSid) {
 	console.log(preferSid);
 }
 
-let prefix = '2001:db8:1234:ffff::/64'; // test-data
-
-let sid = '2001:db8:1111:ffff::2'; // test-data
-let command = 'sudo ip -6 route replace ' + prefix + ' encap seg6 mode encap segs ' + sid + ' dev ens192 ';
 //addRoute(prefix, sids, sid);
-let preResult = execSync(command);
-// 既存の経路があったときにうまく処理する
 
 // get sids[] using prefix
 async function getSids(prefix) {
@@ -197,33 +188,8 @@ async function getSids(prefix) {
 }
 
 
-// 既存の経路のsidの優先順位が逆転した場合にイプシロングリーディのベストSIDを入れ替える関数
-//console.log(options.epsilon);
 // prefixを引数にしてetcdから該当するprefix_sid_listを取得する関数
 
-
-// ハッシュをとって数字8桁にする関数
-function eightHash(str) {
-        const md5 = crypto.createHash('md5');
-        let temp = md5.update(str, 'binary').digest('hex');
-        temp = String(parseInt(temp.replace(/[^0-9]/g, '').slice(-8)));
-        return temp;
-}
-
-
-// 最終的な現在の経路を表示
-if (options.debug) {
-	let commandResult = execSync('ip -6 route show');
-	console.log(`$ ip -6 route show: \n${stdout.toString()}`); 
-}
-
-
-function renewSidNexthopObj(){
-	if (options.debug) {console.log('Interval'); }
-	(async() => {
-		await getNexthop();
-	})();
-}
 
 async function getNexthop() {
 	//await client.put('foo').value('bar');
@@ -251,10 +217,38 @@ async function getNexthop() {
 }
 
 
+// Hash and convert to an 8-digit string numberes
+function eightHash(str) {
+        const md5 = crypto.createHash('md5');
+        let temp = md5.update(str, 'binary').digest('hex');
+        temp = String(parseInt(temp.replace(/[^0-9]/g, '').slice(-8)));
+        return temp;
+}
+
+function renewSidNexthopObj(){
+	if (options.debug) {console.log('Interval: renewSidNextHopObj()'); }
+	(async() => {
+		await getNexthop();
+	})();
+}
+
+
+// show current routes
+if (options.debug) {
+	let commandResult = execSync('ip -6 route show');
+	console.log(`$ ip -6 route show: \n${stdout.toString()}`); 
+}
 
 function main() {
-	setInterval(renewSidNexthopObj, 5000);
-	//setInterval(renew-routes, 10000);
+	// etcdから現在有効なSIDのリストを取得して，無効になったSIDがあったらそのNH-Objectを削除して，増えたNH-Objectがあったらそれを追加する
+	setInterval(renewSidNexthopObj, 3000);
+
+
+	// etcdからprefix全てを取得して，etcdからprefixごとに対応するsidのリストを取得して，rtt_dbからprefix/sidごとのRTTを取得してベストprefixを決めて，WeightedECMPの割合を7:1:1:1で入れてFIBに入れる
+	//setInterval(updateRoutes, 5000);
+	
+	// rtt_dbから最新のprefix/sidを取得して,etcdPrefixes()
+	//setInterval(updateEtcd, 10000);
 }
 
 main();
