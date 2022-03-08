@@ -245,7 +245,10 @@ function eightHash(str) {
   return temp;
 }
 
-function registerPrefix() {}
+async function registerPrefix(prefix) {
+  const sids = await client.put("/epe/content-servers-prefixes/camp.vsix.wide.ad.jp/" + prefix.replace("/", "_")).value('“active” : “true”');
+  return;
+}
 
 function renewSidNexthopObj() {
   if (options.debug) {
@@ -267,16 +270,21 @@ function updateRoutes() {
 
 // prefixを引数にしてetcdから該当するprefix_sid_listを取得する関数
 function pushUsedPrefix() {
-  if (options.debug) {
-    console.log("updateEtcd()");
-  }
-  // rtt_dbから使用されたPrefixの一覧を取得
-  //let test = getNewPrefix();
-  getNewPrefix();
+	if (options.debug) {
+	console.log("updateEtcd()");
+	}
+	// rtt_dbから使用されたPrefixの一覧を取得
+	//let test = getNewPrefix();
+	(async () => {
+	  let testE = await getNewPrefix();
+	  console.log(testE);
+	})();
 
-  // etcdにregisterPrefix()
-  // /epe/content-servers/camp.vsix.wide.ad.jp/2001:db8::_64
-  // “active”: “true”
+	// etcdにregisterPrefix()
+	registerPrefix('2001:db8::/64');
+
+	// /epe/content-servers/camp.vsix.wide.ad.jp/2001:db8::_64
+	// “active”: “true”
 }
 
 // get all rows with ID greater than lastID
