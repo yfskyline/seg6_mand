@@ -212,7 +212,7 @@ if (options.debug) {
 
 
 function renewSidNexthopObj(){
-	console.log('Interval');
+	if (options.debug) {console.log('Interval'); }
 	(async() => {
 		await getNexthop();
 	})();
@@ -246,8 +246,7 @@ async function getNexthop() {
 
 
 function main() {
-	//setInterval(renewSidNexthopObj, 5000);
-	setInterval(renewSidNexthopObj, 1000);
+	setInterval(renewSidNexthopObj, 5000);
 	//setInterval(renew-routes, 10000);
 }
 
