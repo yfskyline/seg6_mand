@@ -130,7 +130,7 @@ connection.query(query, (error, results, fields) => {
 				// 全てのprefix/sidの中でRTTが最小のsidを取得
 				if (options.debug) { console.log('NOT NULL SID!!!'); }
 				// 該当するprefixのsid/rttをMySQLから取得して，各sidでidが一番大きいものを取得
-				query = 'SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE sid = "' + result.sid + '" AND dst_prefix = "' + result.dst_prefix + '" AND sid != "NULL" ORDER BY id DESC LIMIT 1;';
+				query = createQueryMinRttRow(result.sid, result.dst_prefix);
 				(async() =>{
 					let test = await getSids(result.dst_prefix.replace('/','_'));
 					let parsed = JSON.parse(test);
@@ -149,6 +149,11 @@ connection.query(query, (error, results, fields) => {
 		});
 	}
 });
+
+
+function createQueryMinRttRow(sid, dst_prefix) {
+	return 'SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE sid = "' + sid + '" AND dst_prefix = "' + dst_prefix + '" AND sid != "NULL" ORDER BY id DESC LIMIT 1;';
+}
 
 
 // 複数のprefix_sidをipコマンドで埋め込む関数
