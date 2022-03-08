@@ -280,19 +280,26 @@ function pushUsedPrefix() {
 }
 
 // get all rows with ID greater than lastID
-function getNewPrefix() {
+async function getNewPrefix() {
   let queryNewer =
     "SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > " + lastId;
-  connection.query(queryNewer, (error, results, fields) => {
-    if (error) throw error;
-    if (!results.length) {
-      console.log("THERE IS NO NEW PREFIX");
-      return;
-    } else {
+  const queryResult = await new Promise((resolve, reject) => {
+    connection.query(queryNewer, (error, results, fields) => {
+      if (error) {
+        reject(error);
+      }
+
+      if (!results.length) {
+        console.log("THERE IS NO NEW PREFIX");
+        resolve(results);
+        return;
+      }
+
       // console.log(results);
       console.log(
         "=======Processed " + results[results.length - 1].id + " Prefix========"
       );
+
       // write the current id to the file
       fs.writeFileSync(
         "lastId.txt",
@@ -301,11 +308,16 @@ function getNewPrefix() {
         (err) => {
           if (err) {
             console.log(err);
+            reject(err);
           }
         }
       );
-    }
+
+      resolve(results);
+    });
   });
+
+  return queryResult;
 }
 
 function main() {
