@@ -97,7 +97,7 @@ connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId,
 			if (options.debug) {
 				console.log(result);
 				console.log('result.id: ' +  result.id);
-				console.log('results.dst_prefix: ' + result.dest_prefix);
+				console.log('results.dst_prefix: ' + result.dst_prefix);
 				console.log('results.sid: ' + result.sid);
 				console.log('results.rtt: ' + result.rtt);
 			}
@@ -105,11 +105,31 @@ connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId,
 			// sidがNULLかどうか
 			if (result.sid === null) {
 				console.log('NULL!!!');
+				// nullだったら，etcdからそのprefixの全てのsidを取得
+				// 取得したprefixの1つ目はweightedECMPの優先側として経路をreplace
 
-				// get sids corresponding to dest_prefix from etcd
-				//getSids(result.dest_prefix);
-				getSids('2001:db8::/64'); // skyline
-				console.log(getSids(result.dest_prefix));
+				// get sids corresponding to dst_prefix from etcd
+				(async() =>{
+					let test = await getSids(result.dst_prefix.replace('/','_'));
+					let parsed = JSON.parse(test);
+
+					parsed.forEach(function(e) {
+						let command = 'sudo ip -6 nexthop replace id ' + eightHash(e.sid) + ' encap seg6 mode encap segs ' + e.sid + ' dev ens192 proto 200';
+						execSync(command);
+					});
+					// 最初のSIDのweightを7にしてNH-Groupを作成する
+					let groupContents = '';
+					for (i = 1; i < parsed.length; i++) {
+						groupContents += eightHash(parsed[i].sid);
+						groupContents += ',1/';
+					}
+					let command = 'sudo ip nexthop replace id ' + eightHash(result.dst_prefix) + ' group ' + eightHash(parsed[0].sid) + ',7/' + groupContents.slice(0,-1) +  ' proto 200';
+					execSync(command);
+				})()
+
+				// result.dst_prefix宛の経路を作成したNH-Groupにreplaceする
+				command = 'sudo ip -6 route replace ' + result.dst_prefix + ' nhid ' + eightHash(result.dst_prefix) + ' proto 200';
+				//execSync(command);
 
 				// デフォルトSIDを優先して(もしくは適当にどちらかを優先して)経路を埋め込む
 				// addRoute(prefix, sids, preferSid);
@@ -139,24 +159,30 @@ function addRoute (prefix, sids, preferSid) {
 	console.log(sids);
 	console.log(preferSid);
 }
-let sid = '2001:db8:1111:ffff::2';
+
+let prefix = '2001:db8:1234:ffff::/64'; // test-data
+
+let sid = '2001:db8:1111:ffff::2'; // test-data
+let command = 'sudo ip -6 route replace ' + prefix + ' encap seg6 mode encap segs ' + sid + ' dev ens192 ';
 //addRoute(prefix, sids, sid);
+let preResult = execSync(command);
 // 既存の経路があったときにうまく処理する
 
 // get sids[] using prefix
 async function getSids(prefix) {
 	//await client.put('foo').value('bar');
 	//const fooValue = await client.get('foo').string();
-	const sids = await client.get(prefix).string();
-	sidsList = sids.split(',');
-	console.log('sids are:', sidsList);
+	const sids = await client.get('/prefixes/'+prefix).string();
+	//sidsList = sids.split(',');
+	//console.log('sids are:', sidsList);
+	//console.log('sids are:', sids);
+	//return sids.split(',');
 	return sids.split(',');
 	//const allFValues = await client.getAll().prefix('f').keys();
 	//console.log('all our keys starting with "f":', allFValues);
 	//await client.delete().all();
 }
 
-// ha
 
 // 既存の経路のsidの優先順位が逆転した場合にイプシロングリーディのベストSIDを入れ替える関数
 //console.log(options.epsilon);
