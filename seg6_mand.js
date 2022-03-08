@@ -125,10 +125,10 @@ connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId,
 					}
 					let command = 'sudo ip nexthop replace id ' + eightHash(result.dst_prefix) + ' group ' + eightHash(parsed[0].sid) + ',7/' + groupContents.slice(0,-1) +  ' proto 200';
 					execSync(command);
+					// result.dst_prefix宛の経路を作成したNH-Groupにreplaceする
+					command = 'sudo ip -6 route replace ' + result.dst_prefix + ' nhid ' + eightHash(result.dst_prefix) + ' proto 200';
 				})()
 
-				// result.dst_prefix宛の経路を作成したNH-Groupにreplaceする
-				command = 'sudo ip -6 route replace ' + result.dst_prefix + ' nhid ' + eightHash(result.dst_prefix) + ' proto 200';
 				//execSync(command);
 
 				// デフォルトSIDを優先して(もしくは適当にどちらかを優先して)経路を埋め込む
