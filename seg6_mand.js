@@ -85,7 +85,6 @@ let mysqlConfig = {
 // Get new prefix/sid/rtt from rtt_db
 // connect to MySQL
 const connection = mysql.createConnection(mysqlConfig);
-connection.connect();
 
 
 
@@ -210,6 +209,9 @@ function renewSidNexthopObj(){
 
 function updateRoutes() {
 	if (options.debug) { console.log('updateRoutes()'); }
+	// getMyPrefiexes(content-servers-prefixes/FQDN/);
+	// getSids(prefix);
+	//
 }
 
 
@@ -217,6 +219,8 @@ function updateRoutes() {
 function pushUsedPrefix() {
 	if (options.debug) { console.log('updateEtcd()') }
 	// rtt_dbから使用されたPrefixの一覧を取得
+	//let test = getNewPrefix();
+	getNewPrefix();
 	
 	// etcdにregisterPrefix()
 	// /epe/content-servers/camp.vsix.wide.ad.jp/2001:db8::_64
@@ -224,6 +228,26 @@ function pushUsedPrefix() {
 
 }
 
+// get all rows with ID greater than lastID
+function getNewPrefix(){
+	let queryNewer = 'SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId;
+	connection.query(queryNewer, (error, results, fields) => {
+		if (error) throw error;
+		if (!results.length) {
+			console.log('THERE IS NO NEW PREFIX');
+			return;
+		} else {
+			// console.log(results);
+			console.log('=======Processed ' + results[results.length-1].id + ' Prefix========');
+			// write the current id to the file
+			fs.writeFileSync("lastId.txt", results[results.length-1].id.toString(), 'utf-8', (err) =>{
+				if (err) {
+					console.log(err);
+				}
+			});
+		}
+	});
+}
 
 function main() {
 	// etcdから現在有効なSIDのリストを取得して，無効になったSIDがあったらそのNH-Objectを削除して，増えたNH-Objectがあったらそれを追加する
@@ -248,5 +272,4 @@ if (options.debug) {
 	console.log(`$ ip -6 route show: \n${stdout.toString()}`); 
 }
 
-connection.end();
 if (options.debug) { console.log("*******DEBUG MODE********"); }
