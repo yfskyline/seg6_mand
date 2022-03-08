@@ -246,8 +246,11 @@ function eightHash(str) {
 }
 
 async function registerPrefix(prefix) {
-  const sids = await client.put("/epe/content-servers-prefixes/camp.vsix.wide.ad.jp/" + prefix.replace("/", "_")).value('{“active”: true}');
-  return;
+	const to_json = {
+		active: true
+	}
+	const sids = await client.put("/epe/content-servers-prefixes/camp.vsix.wide.ad.jp/" + prefix.replace("/", "_")).value(JSON.stringify(to_json));
+	return;
 }
 
 function renewSidNexthopObj() {
@@ -277,6 +280,10 @@ function pushUsedPrefix() {
 	(async () => {
 	  let newPrefixes = await getNewPrefix();
 	  console.log(newPrefixes);
+      newPrefixes.forEach(function (result) {
+		  console.log(result.dst_prefix);
+		  registerPrefix(result.dst_prefix);
+	  });
 	})();
 
 	// etcdにregisterPrefix()
