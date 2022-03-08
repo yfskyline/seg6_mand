@@ -129,15 +129,19 @@ connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId,
 					command = 'sudo ip -6 route replace ' + result.dst_prefix + ' nhid ' + eightHash(result.dst_prefix) + ' proto 200';
 				})()
 
-				//execSync(command);
-
-				// デフォルトSIDを優先して(もしくは適当にどちらかを優先して)経路を埋め込む
 				// addRoute(prefix, sids, preferSid);
 			} else {
 				// rtt_dbから同じprefix/sidを持つrowの中からidが最大のものをそれぞれ取得
 				// 全てのprefix/sidの中でRTTが最小のsidを取得
 				// addRoute(prefix, sids, preferSid);
 				console.log('NOT NULL SID!');
+				// 該当するprefixのsid/rttをMySQLから取得して，各sidでidが一番大きいものを取得
+				//
+				(async() =>{
+					let test = await getSids(result.dst_prefix.replace('/','_'));
+					let parsed = JSON.parse(test);
+					console.log(parsed);
+				})();
 			}
 		});
 		console.log('=======Processed ' + results[results.length-1].id + ' Prefix========');
