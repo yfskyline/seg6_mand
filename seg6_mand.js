@@ -99,9 +99,9 @@ connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId,
 			if (options.debug) {
 				console.log(result);
 				console.log('result.id: ' +  result.id);
-				console.log('results.dst_prefix: ' + result.dst_prefix);
-				console.log('results.sid: ' + result.sid);
-				console.log('results.rtt: ' + result.rtt);
+				console.log('result.dst_prefix: ' + result.dst_prefix);
+				console.log('result.sid: ' + result.sid);
+				console.log('result.rtt: ' + result.rtt);
 			}
 
 			// sidがNULLかどうか
@@ -138,7 +138,9 @@ connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId,
 				// addRoute(prefix, sids, preferSid);
 				console.log('NOT NULL SID!');
 				// 該当するprefixのsid/rttをMySQLから取得して，各sidでidが一番大きいものを取得
-				connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId, (error, results) => {
+				let query = 'select * from `rtt_db`.`prefix_sid_rtt` WHERE sid = "' + result.sid + '" AND dst_prefix = "' + result.dst_prefix + '" AND sid != "NULL" ORDER BY id DESC LIMIT 1;'
+				console.log(query);
+				connection.query(query, (error, results) => {
 					console.log(results);
 				});
 				(async() =>{
