@@ -103,7 +103,7 @@ pool.getConnection(function(err, connection) {
 				}
 
 				if (result.sid === null) {
-					console.log('NULL!!!');
+					if (options.debug) { console.log('NULL!!!'); }
 					// etcdからそのprefixの全てのsidを取得
 					// 取得したprefixの1つ目はweightedECMPの優先側として経路をreplace
 
@@ -128,15 +128,13 @@ pool.getConnection(function(err, connection) {
 						command = 'sudo ip -6 route replace ' + result.dst_prefix + ' nhid ' + eightHash(result.dst_prefix) + ' proto 200';
 					})()
 
-					// addRoute(prefix, sids, preferSid);
 				} else {
 					// rtt_dbから同じprefix/sidを持つrowの中からidが最大のものをそれぞれ取得
 					// 全てのprefix/sidの中でRTTが最小のsidを取得
-					// addRoute(prefix, sids, preferSid);
-					console.log('NOT NULL SID!');
+					if (options.debug) { console.log('NOT NULL SID!!!'); }
 					// 該当するprefixのsid/rttをMySQLから取得して，各sidでidが一番大きいものを取得
 					let query = 'select * from `rtt_db`.`prefix_sid_rtt` WHERE sid = "' + result.sid + '" AND dst_prefix = "' + result.dst_prefix + '" AND sid != "NULL" ORDER BY id DESC LIMIT 1;'
-					console.log(query);
+					if (options.debug) { console.log('Issued Query: ' + query); }
 					connection.query(query, (error, results) => {
 						console.log(results);
 					});
@@ -172,30 +170,18 @@ function addRoute(prefix, sids, preferSid) {
 
 // get sids[] using prefix
 async function getSids(prefix) {
-	//await client.put('foo').value('bar');
-	//const fooValue = await client.get('foo').string();
 	const sids = await client.get('/prefixes/'+prefix).string();
-	//sidsList = sids.split(',');
 	return sids.split(',');
-	//const allFValues = await client.getAll().prefix('f').keys();
-	//console.log('all our keys starting with "f":', allFValues);
-	//await client.delete().all();
 }
 
 
-
-
 async function getNexthop() {
-	//await client.put('foo').value('bar');
-	//const fooValue = await client.get('foo').string();
-	//console.log(nexthops);
 	//const allFValues = await client.getAll().prefix('/epe/nexthop-list').keys();
+	// 多分ここは，keys()で一覧を取得して，keyごとにvalueを取得するのが本来の使い方(間でkeyの枝刈りなどの処理ができるから)
 	const allFValues = await client.getAll().prefix('/epe/nexthop-list');
-	//console.log(Object.values(allFValues));
 	Object.values(allFValues).forEach(function(e) {
 		let row = JSON.parse(e);
 		if (row.active == true) {
-			//console.log(row.sid);
 			let command = 'sudo ip -6 nexthop replace id ' + eightHash(row.sid) + ' encap seg6 mode encap segs ' + row.sid + ' dev ens192 proto 200';
 			execSync(command);
 		} else {
@@ -203,11 +189,7 @@ async function getNexthop() {
 			let command = 'sudo ip -6 nexthop delete id ' + eightHash(row.sid) + ' encap seg6 mode encap segs ' + row.sid + ' dev ens192 proto 200';
 			execSync(command);
 		}
-		//console.log(JSON.parse(e).sid);
 	})
-	//console.log(allFValues[0]);
-	//console.log('all our keys starting with "f":', allFValues);
-	//await client.delete().all();
 }
 
 
