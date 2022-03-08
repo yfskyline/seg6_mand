@@ -119,7 +119,7 @@ connection.query(query, (error, results, fields) => {
 
         // get sids corresponding to dst_prefix from etcd
         (async () => {
-          let test = await getSids(result.dst_prefix.replace("/", "_"));
+          let test = await getSids(result.dst_prefix);
           let parsed = JSON.parse(test);
 
           parsed.forEach(function (e) {
@@ -163,7 +163,7 @@ connection.query(query, (error, results, fields) => {
         // 該当するprefixのsid/rttをMySQLから取得して，各sidでidが一番大きいものを取得
         query = createQueryMinRttRow(result.sid, result.dst_prefix);
         (async () => {
-          let test = await getSids(result.dst_prefix.replace("/", "_"));
+          let test = await getSids(result.dst_prefix);
           let parsed = JSON.parse(test);
 
           parsed.forEach(function (e) {});
@@ -206,7 +206,7 @@ function addRoute(prefix, sids, preferSid) {
 
 // get sids[] using prefix
 async function getSids(prefix) {
-  const sids = await client.get("/prefixes/" + prefix).string();
+  const sids = await client.get("/prefixes/" + prefix.replace("/", "_")).string();
   return sids.split(",");
 }
 
