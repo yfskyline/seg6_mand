@@ -197,6 +197,8 @@ function eightHash(str) {
         return temp;
 }
 
+function registerPrefix(){
+}
 
 function renewSidNexthopObj(){
 	if (options.debug) {console.log('Interval: renewSidNextHopObj()'); }
@@ -212,8 +214,13 @@ function updateRoutes() {
 
 
 // prefixを引数にしてetcdから該当するprefix_sid_listを取得する関数
-function updateEtcd() {
+function pushUsedPrefix() {
 	if (options.debug) { console.log('updateEtcd()') }
+	// rtt_dbから使用されたPrefixの一覧を取得
+	
+	// etcdにregisterPrefix()
+	// /epe/content-servers/camp.vsix.wide.ad.jp/2001:db8::_64
+	// “active”: “true”
 
 }
 
@@ -229,8 +236,8 @@ function main() {
 	setInterval(updateRoutes, 1000); // skyline
 	
 	// rtt_dbから最新のprefix/sidを取得して,etcdPrefixes()
-	// setInterval(updateEtcd, 10000);
-	setInterval(updateEtcd, 1000); // skyline
+	// setInterval(pushUsedPrefix, 10000);
+	setInterval(pushUsedPrefix, 1000); // skyline
 }
 
 main();
