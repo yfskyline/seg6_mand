@@ -140,7 +140,9 @@ connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId,
 				(async() =>{
 					let test = await getSids(result.dst_prefix.replace('/','_'));
 					let parsed = JSON.parse(test);
-					console.log(parsed);
+
+					parsed.forEach(function(e) {
+					});
 				})();
 			}
 		});
@@ -208,4 +210,46 @@ if (options.debug) {
 	console.log(`$ ip -6 route show: \n${stdout.toString()}`); 
 }
 
+
+function renewSidNexthopObj(){
+	console.log('Interval');
+	(async() => {
+		await getNexthop();
+	})();
+}
+
+async function getNexthop() {
+	//await client.put('foo').value('bar');
+	//const fooValue = await client.get('foo').string();
+	//console.log(nexthops);
+	//const allFValues = await client.getAll().prefix('/epe/nexthop-list').keys();
+	const allFValues = await client.getAll().prefix('/epe/nexthop-list');
+	//console.log(Object.values(allFValues));
+	Object.values(allFValues).forEach(function(e) {
+		let row = JSON.parse(e);
+		if (row.active == true) {
+			//console.log(row.sid);
+			let command = 'sudo ip -6 nexthop replace id ' + eightHash(row.sid) + ' encap seg6 mode encap segs ' + row.sid + ' dev ens192 proto 200';
+			execSync(command);
+		} else {
+			//console.log('ここにきたやつはwithdraw');
+			let command = 'sudo ip -6 nexthop delete id ' + eightHash(row.sid) + ' encap seg6 mode encap segs ' + row.sid + ' dev ens192 proto 200';
+			execSync(command);
+		}
+		//console.log(JSON.parse(e).sid);
+	})
+	//console.log(allFValues[0]);
+	//console.log('all our keys starting with "f":', allFValues);
+	//await client.delete().all();
+}
+
+
+
+function main() {
+	//setInterval(renewSidNexthopObj, 5000);
+	setInterval(renewSidNexthopObj, 1000);
+	//setInterval(renew-routes, 10000);
+}
+
+main();
 if (options.debug) { console.log("*******DEBUG MODE********"); }
