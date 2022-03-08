@@ -163,14 +163,12 @@ pool.getConnection(function(err, connection) {
 
 
 // 複数のprefix_sidをipコマンドで埋め込む関数
-function addRoute (prefix, sids, preferSid) {
-	console.log('======ADDED ROUTE=======');
+function addRoute(prefix, sids, preferSid) {
 	console.log(prefix);
 	console.log(sids);
 	console.log(preferSid);
 }
 
-//addRoute(prefix, sids, sid);
 
 // get sids[] using prefix
 async function getSids(prefix) {
@@ -178,9 +176,6 @@ async function getSids(prefix) {
 	//const fooValue = await client.get('foo').string();
 	const sids = await client.get('/prefixes/'+prefix).string();
 	//sidsList = sids.split(',');
-	//console.log('sids are:', sidsList);
-	//console.log('sids are:', sids);
-	//return sids.split(',');
 	return sids.split(',');
 	//const allFValues = await client.getAll().prefix('f').keys();
 	//console.log('all our keys starting with "f":', allFValues);
@@ -188,7 +183,6 @@ async function getSids(prefix) {
 }
 
 
-// prefixを引数にしてetcdから該当するprefix_sid_listを取得する関数
 
 
 async function getNexthop() {
@@ -225,6 +219,7 @@ function eightHash(str) {
         return temp;
 }
 
+
 function renewSidNexthopObj(){
 	if (options.debug) {console.log('Interval: renewSidNextHopObj()'); }
 	(async() => {
@@ -233,11 +228,16 @@ function renewSidNexthopObj(){
 }
 
 
-// show current routes
-if (options.debug) {
-	let commandResult = execSync('ip -6 route show');
-	console.log(`$ ip -6 route show: \n${stdout.toString()}`); 
+function updateRoutes() {
+	if (options.debug) { console.log('updateRoutes()'); }
 }
+
+
+// prefixを引数にしてetcdから該当するprefix_sid_listを取得する関数
+function updateEtcd() {
+	if (options.debug) { console.log('updateEtcd()') }
+}
+
 
 function main() {
 	// etcdから現在有効なSIDのリストを取得して，無効になったSIDがあったらそのNH-Objectを削除して，増えたNH-Objectがあったらそれを追加する
@@ -245,11 +245,18 @@ function main() {
 
 
 	// etcdからprefix全てを取得して，etcdからprefixごとに対応するsidのリストを取得して，rtt_dbからprefix/sidごとのRTTを取得してベストprefixを決めて，WeightedECMPの割合を7:1:1:1で入れてFIBに入れる
-	//setInterval(updateRoutes, 5000);
+	setInterval(updateRoutes, 5000);
 	
 	// rtt_dbから最新のprefix/sidを取得して,etcdPrefixes()
-	//setInterval(updateEtcd, 10000);
+	setInterval(updateEtcd, 10000);
 }
 
 main();
+
+// show current routes
+if (options.debug) {
+	let commandResult = execSync('ip -6 route show');
+	console.log(`$ ip -6 route show: \n${stdout.toString()}`); 
+}
+
 if (options.debug) { console.log("*******DEBUG MODE********"); }
