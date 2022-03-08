@@ -172,10 +172,10 @@ async function getSids(prefix) {
 
 
 async function getNexthop() {
-	//const allFValues = await client.getAll().prefix('/epe/nexthop-list').keys();
+	//const nexthopList = await client.getAll().prefix('/epe/nexthop-list').keys();
 	// 多分ここは，keys()で一覧を取得して，keyごとにvalueを取得するのが本来の使い方(間でkeyの枝刈りなどの処理ができるから)
-	const allFValues = await client.getAll().prefix('/epe/nexthop-list');
-	Object.values(allFValues).forEach(function(e) {
+	const nexthopList = await client.getAll().prefix('/epe/nexthop-list');
+	Object.values(nexthopList).forEach(function(e) {
 		let row = JSON.parse(e);
 		if (row.active == true) {
 			let command = 'sudo ip -6 nexthop replace id ' + eightHash(row.sid) + ' encap seg6 mode encap segs ' + row.sid + ' dev ens192 proto 200';
@@ -214,19 +214,23 @@ function updateRoutes() {
 // prefixを引数にしてetcdから該当するprefix_sid_listを取得する関数
 function updateEtcd() {
 	if (options.debug) { console.log('updateEtcd()') }
+
 }
 
 
 function main() {
 	// etcdから現在有効なSIDのリストを取得して，無効になったSIDがあったらそのNH-Objectを削除して，増えたNH-Objectがあったらそれを追加する
-	setInterval(renewSidNexthopObj, 3000);
+	//setInterval(renewSidNexthopObj, 3000);
+	setInterval(renewSidNexthopObj, 1000); // skyline
 
 
 	// etcdからprefix全てを取得して，etcdからprefixごとに対応するsidのリストを取得して，rtt_dbからprefix/sidごとのRTTを取得してベストprefixを決めて，WeightedECMPの割合を7:1:1:1で入れてFIBに入れる
-	setInterval(updateRoutes, 5000);
+	// setInterval(updateRoutes, 5000);
+	setInterval(updateRoutes, 1000); // skyline
 	
 	// rtt_dbから最新のprefix/sidを取得して,etcdPrefixes()
-	setInterval(updateEtcd, 10000);
+	// setInterval(updateEtcd, 10000);
+	setInterval(updateEtcd, 1000); // skyline
 }
 
 main();
