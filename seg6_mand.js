@@ -75,8 +75,10 @@ if (options.debug) { console.log(`$ ip -6 route show: \n${stdout.toString()}`); 
 
 // Get new prefix/sid/rtt from rtt_db
 // Connect to MySQL
-const connection = mysql.createConnection({
 
+//const connection = mysql.createConnection({
+const pool = mysql.createPool({
+	connectionLimit: 20,
 	host: 'localhost',
 	port: 13306,
 	user: 'root',
@@ -85,9 +87,9 @@ const connection = mysql.createConnection({
 	timezone: 'jst'
 });
 
-connection.connect();
 // get all rows with ID greater than lastID
-connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId, (error, results, fields) => {
+pool.getConnection(function(err, connection) {
+connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId, (error, results) => {
 	if (error) throw error;
 	if (!results.length) {
 		console.log('THERE IS NO NEW PREFIX');
@@ -136,7 +138,9 @@ connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId,
 				// addRoute(prefix, sids, preferSid);
 				console.log('NOT NULL SID!');
 				// 該当するprefixのsid/rttをMySQLから取得して，各sidでidが一番大きいものを取得
-				//
+				connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId, (error, results) => {
+					console.log(results);
+				});
 				(async() =>{
 					let test = await getSids(result.dst_prefix.replace('/','_'));
 					let parsed = JSON.parse(test);
@@ -155,7 +159,8 @@ connection.query('SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > ' + lastId,
 		});
 	}
 });
-connection.end();
+				connection.release();
+});
 
 
 // 複数のprefix_sidをipコマンドで埋め込む関数
