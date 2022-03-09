@@ -209,7 +209,6 @@ function addRoute(prefix, sids, preferSid) {
 async function getSids(prefix) {
   //const sids = await client.get("/prefixes/" + prefix.replace("/", "_")).string();
   const sids = await client.get("/epe/sid-and-prefixes/" + prefix.replace("/", "_")).string();
-	console.log('sids: ' + sids);
   return sids.split(",");
 }
 
@@ -265,6 +264,11 @@ function renewSidNexthopObj() {
   })();
 }
 
+function updateDefault(){
+	let command = "sudo ip nexthop replace id 1000 group 1000"
+
+}
+
 function updateFib(prefix, sids, prefSid) {
 	(async () => {
 	  let test = await getSids(prefixes);
@@ -315,10 +319,13 @@ function updateRoutes() {
 	(async () => {
 		const prefixes = await getMyPrefixes();
 		prefixes.forEach(function (e) {
-			// const sids = await getSids(e.replace('/','_'));
+			//const sids = await getSids(e.replace('/','_'));
+			//console.log(sids);
 		})
 	// getSids(prefix);
-		console.log(await getNewestRTT('2001:db8:1234::/64', '2001:200:1111:ffff::2'));
+		// console.log(await getNewestRTT('2001:db8:1234::/64', '2001:200:1111:ffff::2'));
+		//console.log(searchPrefSid('2001:db8:1234::/64', getSids('2001:db8:1234::/64')));
+		console.log(await searchPrefSid('2001:200::_32'));
 	//getCurrentRTT(prefix,sid)
 	//prefix/sidごと最短RTTのSIDを計算
 	// rtt_dbから同じprefix/sidを持つrowの中からidが最大のものをそれぞれ取得
@@ -327,17 +334,38 @@ function updateRoutes() {
 	  //let test = await //getSids(dst_prefix);
 	  //let parsed = JSON.parse(test);
 
-	  //parsed.forEach(function (e) {});
 	})();
 
 	// updateFib();
 }
+
+async function searchPrefSid(prefix){
+	let bestSid = 0;
+	let array = {};
+	let sids = await getSids(prefix);
+	//for await (i = 0; i < sids.length; i++) {
+	console.log('sids: ' + JSON.parse(sids));
+	for await (sid of JSON.parse(sids)) {
+		//array[sids[i]] = await getNewestRTT(prefix, sids[i]);
+		let tekitou = []
+		//tekitou = await getNewestRTT(prefix, sid.sid);
+		tekitou = await getNewestRTT('2001:db8:1234::/64', '2001:200:1111:ffff::2')[0].sid;
+		//console.log('tekitou: ' + JSON.stringify(tekitou)); // 空のリスト
+		//console.log('tekitou: ' + JSON.parse(tekitou[0].sid)); // 空のリスト
+		console.log(array[sid]);
+	}
+	// bestSid = array[sids[0]];
+	return bestSid;
+
+}
+
 async function getNewestRTT(prefix, sid) {
   let query = createQueryMinRttRow(sid, prefix);
   const queryResult = await new Promise((resolve, reject) => {
     connection.query(query, (error, results, fields) => {
       if (error) {
-        reject(error);
+      		reject(error);
+		  return;
       }
 
       if (!results.length) {
@@ -441,7 +469,7 @@ function main() {
 
   // etcdからprefix全てを取得して，etcdからprefixごとに対応するsidのリストを取得して，rtt_dbからprefix/sidごとのRTTを取得してベストprefixを決めて，WeightedECMPの割合を7:1:1:1で入れてFIBに入れる
   // setInterval(updateRoutes, 5000);
-  setInterval(updateRoutes, 1000); // skyline
+  //setInterval(updateRoutes, 1000); // skyline
 
   // rtt_dbから最新のprefix/sidを取得して,etcdPrefixes()
   // setInterval(pushUsedPrefix, 10000);
