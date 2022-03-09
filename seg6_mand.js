@@ -103,6 +103,7 @@ const connection = mysql.createConnection(mysqlConfig);
 
 // get all rows with ID greater than lastID
 let query = "SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > " + lastId;
+/*
 connection.query(query, (error, results, fields) => {
   if (error) throw error;
   if (!results.length) {
@@ -119,8 +120,8 @@ connection.query(query, (error, results, fields) => {
 
         // get sids corresponding to dst_prefix from etcd
         (async () => {
-          let test = await getSids(result.dst_prefix);
-          let parsed = JSON.parse(test);
+          // let test = await getSids(result.dst_prefix);
+          // let parsed = JSON.parse(test);
 
           parsed.forEach(function (e) {
             let command =
@@ -163,10 +164,10 @@ connection.query(query, (error, results, fields) => {
         // 該当するprefixのsid/rttをMySQLから取得して，各sidでidが一番大きいものを取得
         query = createQueryMinRttRow(result.sid, result.dst_prefix);
         (async () => {
-          let test = await getSids(result.dst_prefix);
-          let parsed = JSON.parse(test);
+          // let test = await getSids(result.dst_prefix);
+          // let parsed = JSON.parse(test);
 
-          parsed.forEach(function (e) {});
+          //parsed.forEach(function (e) {});
         })();
       }
     });
@@ -186,7 +187,7 @@ connection.query(query, (error, results, fields) => {
     );
   }
 });
-
+*/
 function createQueryMinRttRow(sid, dst_prefix) {
   return (
     'SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE sid = "' +
@@ -206,7 +207,9 @@ function addRoute(prefix, sids, preferSid) {
 
 // get sids[] using prefix
 async function getSids(prefix) {
-  const sids = await client.get("/prefixes/" + prefix.replace("/", "_")).string();
+  //const sids = await client.get("/prefixes/" + prefix.replace("/", "_")).string();
+  const sids = await client.get("/epe/sid-and-prefixes/" + prefix.replace("/", "_")).string();
+	console.log('sids: ' + sids);
   return sids.split(",");
 }
 
@@ -262,55 +265,64 @@ function renewSidNexthopObj() {
   })();
 }
 
-function updateFib(prefixes, sids, prefSid) {
+function updateFib(prefix, sids, prefSid) {
 	(async () => {
 	  let test = await getSids(prefixes);
 	  let parsed = JSON.parse(test);
 
 	  // 最初のSIDのweightを7にしてNH-Groupを作成する
 	  let groupContents = "";
-	  for (i = 1; i < parsed.length; i++) {
+	  for (i = 1; i < sids.length; i++) {
 		groupContents += eightHash(parsed[i].sid);
 		groupContents += ",1/";
 	  }
 	  let command =
 		"sudo ip nexthop replace id " +
-		eightHash(result.dst_prefix) +
+		eightHash(prefix) +
 		" group " +
-		eightHash(parsed[0].sid) +
+		eightHash(prefSid) +
 		",7/" +
 		groupContents.slice(0, -1) +
 		" proto 200";
 	  execSync(command);
-	  // .dst_prefix宛の経路を作成したNH-Groupにreplaceする
+
+	  // prefix宛の経路を作成したNH-Groupにreplaceする
 	  command =
 		"sudo ip -6 route replace " +
-		result.dst_prefix +
+		prefix +
 		" nhid " +
-		eightHash(result.dst_prefix) +
+		eightHash(prefix) +
 		" proto 200 expires 300";
+	  execSync(command);
 	})();
 }
 
 async function getMyPrefixes() {
-	const prefixes = await client.getAll().prefix('/prefixes/content-servers-prefixes/camp.vsix.wide.ad.jp').keys();
+	const prefixes = await client.getAll().prefix('/epe/content-servers-prefixes/camp.vsix.wide.ad.jp').keys();
 	//const nexthopList = await client.getAll().prefix('/epe/nexthop-list').keys();
 		///epe/content-servers-prefixes/camp.vsix.wide.ad.jp/2001:db8:1234::_64
-	return prefixes;
+	let list = [];
+	prefixes.forEach(function (e) {
+		list.push(e.split('/').slice(-1)[0].replace('_','/'));
+	});
+	return list;
 }
 
 
 function updateRoutes() {
 	if (options.debug) { console.log("updateRoutes()");
 	}
-	// getMyPrefiexes(content-servers-prefixes/FQDN/);
+	(async () => {
+		const prefixes = await getMyPrefixes();
+		prefixes.forEach(function (e) {
+			// const sids = await getSids(e.replace('/','_'));
+		})
 	// getSids(prefix);
 	//getCurrentRTT(prefix,sid)
 	//prefix/sidごと最短RTTのSIDを計算
 	// rtt_dbから同じprefix/sidを持つrowの中からidが最大のものをそれぞれ取得
 	// 全てのprefix/sidの中でRTTが最小のsidを取得
 	// 該当するprefixのsid/rttをMySQLから取得して，各sidでidが一番大きいものを取得
-	(async () => {
 	  //let test = await //getSids(dst_prefix);
 	  //let parsed = JSON.parse(test);
 
