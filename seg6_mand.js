@@ -318,6 +318,7 @@ function updateRoutes() {
 			// const sids = await getSids(e.replace('/','_'));
 		})
 	// getSids(prefix);
+		console.log(await getNewestRTT('2001:db8:1234::/64', '2001:200:1111:ffff::2'));
 	//getCurrentRTT(prefix,sid)
 	//prefix/sidごと最短RTTのSIDを計算
 	// rtt_dbから同じprefix/sidを持つrowの中からidが最大のものをそれぞれ取得
@@ -331,10 +332,10 @@ function updateRoutes() {
 
 	// updateFib();
 }
-async function getMinSid(prefix, sid) {
+async function getNewestRTT(prefix, sid) {
   let query = createQueryMinRttRow(sid, prefix);
   const queryResult = await new Promise((resolve, reject) => {
-    connection.query(queryNewer, (error, results, fields) => {
+    connection.query(query, (error, results, fields) => {
       if (error) {
         reject(error);
       }
