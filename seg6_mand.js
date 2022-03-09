@@ -262,13 +262,100 @@ function renewSidNexthopObj() {
   })();
 }
 
+function updateFib(prefixes, sids, prefSid) {
+	(async () => {
+	  let test = await getSids(prefixes);
+	  let parsed = JSON.parse(test);
+
+	  // 最初のSIDのweightを7にしてNH-Groupを作成する
+	  let groupContents = "";
+	  for (i = 1; i < parsed.length; i++) {
+		groupContents += eightHash(parsed[i].sid);
+		groupContents += ",1/";
+	  }
+	  let command =
+		"sudo ip nexthop replace id " +
+		eightHash(result.dst_prefix) +
+		" group " +
+		eightHash(parsed[0].sid) +
+		",7/" +
+		groupContents.slice(0, -1) +
+		" proto 200";
+	  execSync(command);
+	  // .dst_prefix宛の経路を作成したNH-Groupにreplaceする
+	  command =
+		"sudo ip -6 route replace " +
+		result.dst_prefix +
+		" nhid " +
+		eightHash(result.dst_prefix) +
+		" proto 200 expires 300";
+	})();
+}
+
+async function getMyPrefixes() {
+	const prefixes = await client.getAll().prefix('/prefixes/content-servers-prefixes/camp.vsix.wide.ad.jp').keys();
+	//const nexthopList = await client.getAll().prefix('/epe/nexthop-list').keys();
+		///epe/content-servers-prefixes/camp.vsix.wide.ad.jp/2001:db8:1234::_64
+	return prefixes;
+}
+
+
 function updateRoutes() {
-  if (options.debug) {
-    console.log("updateRoutes()");
-  }
-  // getMyPrefiexes(content-servers-prefixes/FQDN/);
-  // getSids(prefix);
-  //
+	if (options.debug) { console.log("updateRoutes()");
+	}
+	// getMyPrefiexes(content-servers-prefixes/FQDN/);
+	// getSids(prefix);
+	//getCurrentRTT(prefix,sid)
+	//prefix/sidごと最短RTTのSIDを計算
+	// rtt_dbから同じprefix/sidを持つrowの中からidが最大のものをそれぞれ取得
+	// 全てのprefix/sidの中でRTTが最小のsidを取得
+	// 該当するprefixのsid/rttをMySQLから取得して，各sidでidが一番大きいものを取得
+	(async () => {
+	  //let test = await //getSids(dst_prefix);
+	  //let parsed = JSON.parse(test);
+
+	  //parsed.forEach(function (e) {});
+	})();
+
+	// updateFib();
+}
+async function getMinSid(prefix, sid) {
+  let query = createQueryMinRttRow(sid, prefix);
+  const queryResult = await new Promise((resolve, reject) => {
+    connection.query(queryNewer, (error, results, fields) => {
+      if (error) {
+        reject(error);
+      }
+
+      if (!results.length) {
+        console.log("THERE IS NO NEW PREFIX");
+        resolve(results);
+        return;
+      }
+
+      // console.log(results);
+      console.log(
+        "=======Processed " + results[results.length - 1].id + " Prefix========"
+      );
+
+      // write the current id to the file
+      fs.writeFileSync(
+        "lastId.txt",
+        results[results.length - 1].id.toString(),
+        "utf-8",
+        (err) => {
+          if (err) {
+            console.log(err);
+            reject(err);
+          }
+        }
+      );
+
+      resolve(results);
+    });
+  });
+
+  return queryResult;
 }
 
 // prefixを引数にしてetcdから該当するprefix_sid_listを取得する関数
