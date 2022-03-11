@@ -102,7 +102,7 @@ let mysqlConfig = {
 const connection = mysql.createConnection(mysqlConfig);
 
 // get all rows with ID greater than lastID
-let query = "SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > " + lastId;
+let query = `SELECT * FROM \`rtt_db\`.\`prefix_sid_rtt\` WHERE id > ${lastId}`;
 /*
 connection.query(query, (error, results, fields) => {
   if (error) throw error;
@@ -190,11 +190,7 @@ connection.query(query, (error, results, fields) => {
 */
 function createQueryMinRttRow(sid, dst_prefix) {
   return (
-    'SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE sid = "' +
-    sid +
-    '" AND dst_prefix = "' +
-    dst_prefix +
-    '" AND sid != "NULL" ORDER BY id DESC LIMIT 1;'
+    `SELECT * FROM \`rtt_db\`.\`prefix_sid_rtt\` WHERE sid = "${sid}" AND dst_prefix = "${dst_prefix}" AND sid != "NULL" ORDER BY id DESC LIMIT 1;`
   );
 }
 
@@ -424,7 +420,7 @@ function pushUsedPrefix() {
 // get all rows with ID greater than lastID
 async function getNewPrefix() {
   let queryNewer =
-    "SELECT * FROM `rtt_db`.`prefix_sid_rtt` WHERE id > " + lastId;
+    `SELECT * FROM \`rtt_db\`.\`prefix_sid_rtt\` WHERE id > ${lastId}`;
   const queryResult = await new Promise((resolve, reject) => {
     connection.query(queryNewer, (error, results, fields) => {
       if (error) {
