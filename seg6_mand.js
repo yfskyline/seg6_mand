@@ -64,18 +64,18 @@ if (options.debug) {
 // Variable Declaration
 // epsilong greedy algorithm's parameter
 if (options.debug) {
-  console.log("epsilon: " + options.epsilon);
+  console.log(`epsilon: ${options.epsilon}`);
 }
 
 // PassiveRTTが何も取得できていない場合に用いるデフォルトSID
 if (options.debug) {
-  console.log("default SID: " + options.sid);
+  console.log(`default SID: ${options.sid}`);
 }
 
 // read the last rtt_db id got from file
 const lastId = parseInt(fs.readFileSync("lastId.txt", { encoding: "utf-8" }));
 if (options.debug) {
-  console.log("lastId: " + lastId);
+  console.log(`lastId: ${lastId}`);
 }
 
 // Current Routes
@@ -172,7 +172,7 @@ connection.query(query, (error, results, fields) => {
       }
     });
     console.log(
-      "=======Processed " + results[results.length - 1].id + " Prefix========"
+      `=======Processed ${results[results.length - 1].id} Prefix========`
     );
     // write the current id to the file
     fs.writeFileSync(
@@ -326,14 +326,14 @@ async function searchPrefSid(prefix){
 	let array = {};
 	let sids = await getSids(prefix);
 	//for await (i = 0; i < sids.length; i++) {
-	console.log('sids: ' + JSON.parse(sids));
+	console.log(`sids: ${JSON.parse(sids)}`);
 	for await (sid of JSON.parse(sids)) {
 		//array[sids[i]] = await getNewestRTT(prefix, sids[i]);
 		let tekitou = []
 		//tekitou = await getNewestRTT(prefix, sid.sid);
 		tekitou = await getNewestRTT('2001:db8:1234::/64', '2001:200:1111:ffff::2')[0].sid;
-		//console.log('tekitou: ' + JSON.stringify(tekitou)); // 空のリスト
-		//console.log('tekitou: ' + JSON.parse(tekitou[0].sid)); // 空のリスト
+		//console.log(`tekitou: ${JSON.stringify(tekitou)}`); // 空のリスト
+		//console.log(`tekitou: ${JSON.parse(tekitou[0].sid)}`); // 空のリスト
 		console.log(array[sid]);
 	}
 	// bestSid = array[sids[0]];
@@ -357,9 +357,7 @@ async function getNewestRTT(prefix, sid) {
       }
 
       // console.log(results);
-      console.log(
-        "=======Processed " + results[results.length - 1].id + " Prefix========"
-      );
+      console.log(`=======Processed ${results[results.length - 1].id} Prefix========`);
 
       // write the current id to the file
       fs.writeFileSync(
@@ -420,9 +418,7 @@ async function getNewPrefix() {
       }
 
       // console.log(results);
-      console.log(
-        "=======Processed " + results[results.length - 1].id + " Prefix========"
-      );
+      console.log(`=======Processed ${results[results.length - 1].id} Prefix========`);
 
       // write the current id to the file
       fs.writeFileSync(
