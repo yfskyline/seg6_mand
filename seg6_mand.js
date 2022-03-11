@@ -273,22 +273,12 @@ function updateFib(prefix, sids, prefSid) {
 		groupContents += ",1/";
 	  }
 	  let command =
-		"sudo ip nexthop replace id " +
-		eightHash(prefix) +
-		" group " +
-		eightHash(prefSid) +
-		",7/" +
-		groupContents.slice(0, -1) +
-		" proto 200";
+		`sudo ip nexthop replace id ${eightHash(prefix)} group ${eightHash(prefSid)},7/${groupContents.slice(0, -1)} proto 200`;
 	  execSync(command);
 
 	  // prefix宛の経路を作成したNH-Groupにreplaceする
 	  command =
-		"sudo ip -6 route replace " +
-		prefix +
-		" nhid " +
-		eightHash(prefix) +
-		" proto 200 expires 300";
+		`sudo ip -6 route replace ${prefix} nhid ${eightHash(prefix)} proto 200 expires 300`;
 	  execSync(command);
 	})();
 }
