@@ -225,11 +225,7 @@ async function getNexthop() {
     } else {
       //console.log('ここにきたやつはwithdraw');
       let command =
-        "sudo ip -6 nexthop delete id " +
-        eightHash(row.sid) +
-        " encap seg6 mode encap segs " +
-        row.sid +
-        " dev ens192 proto 200";
+        `sudo ip -6 nexthop delete id ${eightHash(row.sid)}`
       execSync(command);
     }
   });
